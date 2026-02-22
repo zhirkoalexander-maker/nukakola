@@ -1,0 +1,46 @@
+🚨 CRITICAL - GITHUB PAGES NOT WORKING?
+
+This file shows you EXACTLY what to select in GitHub Pages settings.
+
+═══════════════════════════════════════════════════
+
+YOUR SETTINGS MUST BE:
+
+1. Go here: https://github.com/zhirkoalexander-maker/nukakola/settings/pages
+
+2. In the "Pages" section, you MUST see this:
+
+   ┌─────────────────────────────────────┐
+   │ Source:                             │
+   │ [Deploy from a branch ▼]            │
+   │                                     │
+   │ Branch: [gh-pages ▼]                │
+   │ Folder: [/ (root) ▼]                │
+   │                                     │
+   │ [Save button]                       │
+   └─────────────────────────────────────┘
+
+3. IMPORTANT: 
+   - Branch MUST be: gh-pages
+   - Folder MUST be: / (root)
+   - NOT main, NOT /docs
+
+4. After saving, WAIT 3-5 MINUTES
+
+5. You should see GREEN checkmark ✅ after deployment
+
+6. Visit: https://zhirkoalexander-maker.github.io/nukakola/
+
+═══════════════════════════════════════════════════
+
+If you still see 404:
+- Clear browser cache: Cmd+Shift+R (Mac) or Ctrl+Shift+R (Windows)
+- Incognito/Private window
+- Wait longer (up to 10 minutes)
+- Check that checkmark is GREEN ✅
+
+Still stuck? Check that repo has TWO branches in Settings:
+- main (for code)
+- gh-pages (for website)
+
+If gh-pages branch is missing, something went wrong with git setup.
