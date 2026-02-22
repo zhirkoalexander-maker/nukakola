@@ -1,0 +1,37 @@
+⚠️ GITHUB PAGES MUST BE MANUALLY ENABLED
+
+The website is showing 404 because GitHub Pages is NOT activated in your repository settings.
+
+THIS MUST BE DONE MANUALLY (can't be automated via git).
+
+═══════════════════════════════════════════════════
+
+STEP-BY-STEP (COPY-PASTE LINK BELOW):
+
+1️⃣  Open this link directly:
+    https://github.com/zhirkoalexander-maker/nukakola/settings/pages
+
+2️⃣  You'll see "GitHub Pages" section - make these selections:
+    
+    Source: "Deploy from a branch" (dropdown)
+    Branch: "main" (dropdown)  
+    Folder: "/docs" (dropdown)
+    
+3️⃣  Click "Save" button
+
+4️⃣  Wait 1-2 minutes (you'll see green checkmark ✅)
+
+5️⃣  Your site will appear at:
+    https://zhirkoalexander-maker.github.io/nukakola/
+
+═══════════════════════════════════════════════════
+
+DIRECT LINK (OPEN THIS):
+👉 https://github.com/zhirkoalexander-maker/nukakola/settings/pages
+
+All files are ready in /docs folder:
+✓ index.html (main page)
+✓ game.html (playable game)
+✓ .nojekyll (Jekyll bypass)
+
+Just need to enable Pages in Settings!
