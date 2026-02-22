@@ -1,0 +1,28 @@
+⚠️  FINAL FIX - Follow these EXACT steps:
+
+GitHub Pages sometimes needs explicit branch selection.
+
+═══════════════════════════════════════════════════
+
+IMPORTANT: Go to Settings → Pages and set:
+
+Source: "Deploy from a branch" 
+Branch: "gh-pages" ← THIS IS THE KEY!
+Folder: "/" (root)
+
+Save and wait 2-3 minutes.
+
+═══════════════════════════════════════════════════
+
+DIRECT LINK:
+👉 https://github.com/zhirkoalexander-maker/nukakola/settings/pages
+
+Select "gh-pages" branch, not "main"!
+
+After 2-3 min, your site will be live at:
+https://zhirkoalexander-maker.github.io/nukakola/
+
+If STILL 404, try:
+- Hard refresh: Cmd+Shift+R (Mac) or Ctrl+Shift+R (Windows)  
+- Wait 5 minutes and try again
+- Check that checkmark appears green ✅ in Pages settings
