@@ -19,78 +19,124 @@
             min-height: 100vh;
             font-family: Arial, sans-serif;
             color: #e0e0e0;
+            overflow: hidden;
+        }
+        
+        .wrapper {
+            width: 100%;
+            max-width: 1600px;
+            padding: 10px;
         }
         
         .game-container {
-            background: rgba(15, 52, 96, 0.9);
+            background: rgba(15, 52, 96, 0.95);
             border: 3px solid #64dd17;
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 0 30px rgba(100, 221, 23, 0.5);
         }
         
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #64dd17;
         }
         
         .header h1 {
-            font-size: 2.5em;
+            font-size: 2em;
             text-shadow: 0 0 10px #64dd17;
-            margin-bottom: 5px;
         }
         
-        .header p {
-            color: #b0e0e6;
-            font-size: 1.1em;
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
         
         canvas {
-            display: block;
             background: #000;
             border: 2px solid #64dd17;
-            margin: 0 auto;
+            display: block;
             width: 100%;
-            max-width: 1280px;
+            aspect-ratio: 16 / 9;
+            max-height: 70vh;
+        }
+        
+        .sidebar {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #533483;
+            border-radius: 5px;
+            padding: 12px;
+            color: #b0e0e6;
+            font-size: 0.85em;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+        
+        .sidebar h3 {
+            color: #64dd17;
+            font-size: 0.95em;
+            margin: 10px 0 8px 0;
+            border-bottom: 1px solid #533483;
+            padding-bottom: 5px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            padding: 2px 0;
+        }
+        
+        .stat-label { color: #76ff03; }
+        .stat-value { color: #64dd17; font-weight: bold; }
+        
+        .block-buttons, .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .btn {
+            background: #333;
+            border: 1px solid #555;
+            color: #b0e0e6;
+            padding: 4px 6px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.75em;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover, .btn.active {
+            background: #64dd17;
+            color: #000;
+            font-weight: bold;
         }
         
         .controls {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid #533483;
             border-radius: 5px;
-            padding: 15px;
-            margin-top: 20px;
+            padding: 12px;
             color: #b0e0e6;
+            font-size: 0.8em;
+            line-height: 1.4;
         }
         
         .controls h3 {
             color: #64dd17;
-            margin-bottom: 10px;
-        }
-        
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            margin-bottom: 8px;
             font-size: 0.9em;
-        }
-        
-        .control-group {
-            text-align: left;
-        }
-        
-        .control-group strong {
-            color: #76ff03;
-            display: block;
-            margin-bottom: 5px;
         }
         
         .footer {
             text-align: center;
-            margin-top: 20px;
             color: #b0e0e6;
-            font-size: 0.9em;
+            font-size: 0.75em;
+            margin-top: 10px;
         }
         
         .footer a {
@@ -108,49 +154,77 @@
             right: 10px;
             background: rgba(0, 0, 0, 0.8);
             color: #00ff00;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 5px;
             font-family: monospace;
             border: 1px solid #00ff00;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 1024px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                max-height: 300px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="header">
-            <h1>⚔️ BASE DEFENSE</h1>
-            <p>Tower Builder Strategy Game - Play Online</p>
-        </div>
-        
-        <canvas id="gameCanvas" width="1280" height="720"></canvas>
-        
-        <div class="controls">
-            <h3>🎮 Game Controls</h3>
-            <div class="controls-grid">
-                <div class="control-group">
-                    <strong>Movement</strong>
-                    <span>W/A/S/D - Move</span>
-                </div>
-                <div class="control-group">
-                    <strong>Modes</strong>
-                    <span>1 - Build | 2 - Break | 3 - Weapon</span>
-                </div>
-                <div class="control-group">
-                    <strong>Weapons</strong>
-                    <span>X-Sword | C-Axe | V-Spear | Z-Sniper | F-Hammer | L-Laser</span>
-                </div>
-                <div class="control-group">
-                    <strong>Game</strong>
-                    <span>P - Pause | ESC - Menu | Click - Use Mode</span>
+    <div class="wrapper">
+        <div class="game-container">
+            <div class="header">
+                <h1>⚔️ BASE DEFENSE - Play Now</h1>
+            </div>
+            
+            <div class="game-layout">
+                <canvas id="gameCanvas" width="1280" height="720"></canvas>
+                
+                <div class="sidebar">
+                    <!-- Stats -->
+                    <h3>📊 STATS</h3>
+                    <div class="stat-item"><span class="stat-label">Wave</span><span class="stat-value" id="wave">1</span></div>
+                    <div class="stat-item"><span class="stat-label">Enemies</span><span class="stat-value" id="enemies">0</span></div>
+                    <div class="stat-item"><span class="stat-label">Health</span><span class="stat-value" id="health">100</span></div>
+                    <div class="stat-item"><span class="stat-label">Base</span><span class="stat-value" id="basehealth">200</span></div>
+                    <div class="stat-item"><span class="stat-label">Money</span><span class="stat-value" id="money">$500</span></div>
+                    <div class="stat-item"><span class="stat-label">Score</span><span class="stat-value" id="score">0</span></div>
+                    
+                    <!-- Blocks -->
+                    <h3>🏗️ BLOCKS</h3>
+                    <div class="block-buttons">
+                        <button class="btn active" data-block="wood">Wood $40</button>
+                        <button class="btn" data-block="stone">Stone $80</button>
+                        <button class="btn" data-block="brick">Brick $70</button>
+                        <button class="btn" data-block="iron">Iron $150</button>
+                        <button class="btn" data-block="diamond">Diamond $400</button>
+                    </div>
+                    
+                    <!-- Mode -->
+                    <h3>🎮 MODE</h3>
+                    <div class="mode-buttons">
+                        <button class="btn" data-mode="build">BUILD</button>
+                        <button class="btn" data-mode="break">BREAK</button>
+                        <button class="btn active" data-mode="weapon">WEAPON</button>
+                    </div>
+                    
+                    <!-- Controls -->
+                    <h3>⌨️ CONTROLS</h3>
+                    <div class="controls">
+                        <strong>Move:</strong> WASD<br>
+                        <strong>Mode:</strong> 1/2/3<br>
+                        <strong>Weapon:</strong> X-L<br>
+                        <strong>Click:</strong> Place/Break<br>
+                        <strong>P:</strong> Pause<br>
+                        <strong>ESC:</strong> Menu
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="footer">
-            <p>💾 Saving to browser storage | 
-            <a href="https://github.com/zhirkoalexander-maker/nukakola/blob/main/building_game.py">📝 View Original Python Code</a> | 
-            <a href="https://github.com/zhirkoalexander-maker/nukakola">📦 Full Repository</a></p>
-            <p>🎮 Click canvas to focus before playing | Keyboard controls active</p>
+            
+            <div class="footer">
+                <p>Click canvas to focus | <a href="https://github.com/zhirkoalexander-maker/nukakola/blob/main/building_game.py">View Source Code</a> | <a href="https://github.com/zhirkoalexander-maker/nukakola">Repository</a></p>
+            </div>
         </div>
     </div>
     
@@ -159,11 +233,10 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        
-        // Game Variables
         const WIDTH = canvas.width;
         const HEIGHT = canvas.height;
         
+        // Game state
         let gameState = 'menu';
         let playerX = WIDTH / 2;
         let playerY = HEIGHT / 2;
@@ -174,12 +247,12 @@
         let wave = 1;
         let enemies = [];
         let blocks = [];
-        let activeMode = 'weapon'; // 'build', 'break', 'weapon'
-        let activeWeapon = 'sword';
-        let gameRunning = true;
+        let projectiles = [];
+        let activeMode = 'weapon';
         let selectedBlock = 'wood';
+        let lastWaveSpawn = 0;
+        let isPaused = false;
         
-        // Block types
         const BLOCKS = {
             wood: { color: '#8B5A2B', cost: 40, health: 40 },
             stone: { color: '#A9A9A9', cost: 80, health: 80 },
@@ -188,33 +261,20 @@
             diamond: { color: '#96DCFF', cost: 400, health: 300 }
         };
         
-        // Enemies
         class Enemy {
             constructor(x, y, type = 'zombie') {
                 this.x = x;
                 this.y = y;
                 this.type = type;
-                this.speed = 1.5;
-                this.health = 30;
-                this.damage = 10;
+                this.speed = 1.5 + (wave * 0.1);
+                this.maxHealth = 30 + (wave * 5);
+                this.health = this.maxHealth;
+                this.damage = 10 + (wave * 2);
                 this.size = 15;
-            }
-            
-            draw() {
-                ctx.fillStyle = '#ff6b6b';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                
-                // Health bar
-                ctx.fillStyle = '#ff0000';
-                ctx.fillRect(this.x - this.size, this.y - this.size - 10, this.size * 2, 3);
-                ctx.fillStyle = '#00ff00';
-                ctx.fillRect(this.x - this.size, this.y - this.size - 10, (this.size * 2) * (this.health / 30), 3);
+                this.experience = 10 + (wave * 5);
             }
             
             update() {
-                // Move towards base
                 const dx = playerX - this.x;
                 const dy = playerY - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
@@ -224,29 +284,44 @@
                     this.y += (dy / dist) * this.speed;
                 }
             }
+            
+            draw() {
+                ctx.fillStyle = '#ff6b6b';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#ff0000';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Health bar
+                const barWidth = this.size * 2;
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(this.x - this.size, this.y - this.size - 8, barWidth, 3);
+                ctx.fillStyle = '#00ff00';
+                ctx.fillRect(this.x - this.size, this.y - this.size - 8, barWidth * (this.health / this.maxHealth), 3);
+            }
         }
         
-        // Block
         class Block {
             constructor(x, y, type = 'wood') {
                 this.x = x;
                 this.y = y;
                 this.type = type;
                 this.size = 40;
-                this.health = BLOCKS[type].health;
                 this.maxHealth = BLOCKS[type].health;
+                this.health = BLOCKS[type].health;
             }
             
             draw() {
                 ctx.fillStyle = BLOCKS[this.type].color;
                 ctx.fillRect(this.x, this.y, this.size, this.size);
                 
-                // Border
                 ctx.strokeStyle = '#000';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(this.x, this.y, this.size, this.size);
                 
-                // Health bar if damaged
                 if (this.health < this.maxHealth) {
                     ctx.fillStyle = '#ff0000';
                     ctx.fillRect(this.x, this.y - 5, this.size, 3);
@@ -254,47 +329,87 @@
                     ctx.fillRect(this.x, this.y - 5, (this.size) * (this.health / this.maxHealth), 3);
                 }
             }
+            
+            collides(x, y) {
+                return x >= this.x && x < this.x + this.size && 
+                       y >= this.y && y < this.y + this.size;
+            }
         }
         
-        // Draw functions
+        class Projectile {
+            constructor(x, y, targetX, targetY, damage = 25) {
+                this.x = x;
+                this.y = y;
+                this.targetX = targetX;
+                this.targetY = targetY;
+                this.damage = damage;
+                this.speed = 8;
+                this.size = 5;
+                const dx = targetX - x;
+                const dy = targetY - y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                this.vx = (dx / dist) * this.speed;
+                this.vy = (dy / dist) * this.speed;
+                this.life = 200;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life--;
+            }
+            
+            draw() {
+                ctx.fillStyle = '#ffff00';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ffaa00';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+        }
+        
         function drawMenu() {
-            ctx.fillStyle = 'rgba(26, 26, 46, 0.9)';
+            const grad = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+            grad.addColorStop(0, '#1a3a52');
+            grad.addColorStop(1, '#0f1f2e');
+            ctx.fillStyle = grad;
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
             
-            // Title
             ctx.fillStyle = '#64dd17';
-            ctx.font = 'bold 60px Arial';
+            ctx.font = 'bold 80px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('BASE DEFENSE', WIDTH / 2, 100);
+            ctx.fillText('BASE DEFENSE', WIDTH / 2, 120);
             
-            // Subtitle
             ctx.fillStyle = '#b0e0e6';
-            ctx.font = '24px Arial';
-            ctx.fillText('Tower Builder Strategy Game', WIDTH / 2, 150);
+            ctx.font = '28px Arial';
+            ctx.fillText('Tower Builder Strategy Game', WIDTH / 2, 180);
             
-            // Start button
             ctx.fillStyle = '#64dd17';
-            ctx.fillRect(WIDTH / 2 - 150, HEIGHT / 2, 300, 60);
+            ctx.fillRect(WIDTH / 2 - 150, HEIGHT / 2, 300, 70);
             ctx.fillStyle = '#000';
-            ctx.font = 'bold 28px Arial';
-            ctx.fillText('CLICK TO START', WIDTH / 2, HEIGHT / 2 + 45);
+            ctx.font = 'bold 32px Arial';
+            ctx.fillText('CLICK TO START', WIDTH / 2, HEIGHT / 2 + 50);
             
-            // Info
             ctx.fillStyle = '#b0e0e6';
             ctx.font = '16px Arial';
-            ctx.fillText('Defend your base from enemy waves', WIDTH / 2, HEIGHT - 100);
-            ctx.fillText('Build blocks, hire units, defeat enemies', WIDTH / 2, HEIGHT - 60);
+            ctx.fillText('Defend your base from enemy waves', WIDTH / 2, HEIGHT - 80);
+            ctx.fillText('Build blocks • Use weapons • Survive longer', WIDTH / 2, HEIGHT - 40);
         }
         
         function drawGame() {
-            // Background
-            ctx.fillStyle = '#1a1a2e';
+            const grad = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+            grad.addColorStop(0, '#1a2a3e');
+            grad.addColorStop(1, '#0f1520');
+            ctx.fillStyle = grad;
             ctx.fillRect(0, 0, WIDTH, HEIGHT);
             
-            // Draw blocks
             blocks.forEach(block => block.draw());
+            enemies.forEach(enemy => enemy.draw());
+            projectiles.forEach(proj => proj.draw());
             
-            // Draw base core
+            // Base core
             ctx.fillStyle = '#FFD700';
             ctx.beginPath();
             ctx.arc(playerX, playerY, 20, 0, Math.PI * 2);
@@ -303,181 +418,243 @@
             ctx.lineWidth = 3;
             ctx.stroke();
             
-            // Draw enemies
-            enemies.forEach(enemy => enemy.draw());
-            
-            // Draw player
+            // Player
             ctx.fillStyle = '#00ff00';
-            ctx.fillRect(playerX - 15, playerY - 15, 30, 30);
+            ctx.fillRect(playerX - 12, playerY - 12, 24, 24);
             ctx.strokeStyle = '#64dd17';
             ctx.lineWidth = 2;
-            ctx.strokeRect(playerX - 15, playerY - 15, 30, 30);
+            ctx.strokeRect(playerX - 12, playerY - 12, 24, 24);
             
-            // Draw UI
+            // UI
             ctx.fillStyle = '#64dd17';
-            ctx.font = 'bold 20px Arial';
+            ctx.font = 'bold 18px Arial';
             ctx.textAlign = 'left';
-            ctx.fillText(`Wave: ${wave}`, 10, 30);
-            ctx.fillText(`Enemies: ${enemies.length}`, 10, 60);
-            ctx.fillText(`Money: $${money}`, 10, 90);
-            ctx.fillText(`Health: ${playerHealth}`, 10, 120);
-            ctx.fillText(`Base: ${baseCoreHealth}`, 10, 150);
+            ctx.fillText(`Wave: ${wave}`, 15, 30);
+            ctx.fillText(`Enemies: ${enemies.length}`, 15, 55);
+            ctx.fillText(`Mode: ${activeMode}`, 15, 80);
             
-            // Right side UI
             ctx.textAlign = 'right';
-            ctx.fillText(`Mode: ${activeMode}`, WIDTH - 10, 30);
-            ctx.fillText(`Weapon: ${activeWeapon}`, WIDTH - 10, 60);
-            ctx.fillText(`Score: ${score}`, WIDTH - 10, 90);
+            ctx.fillText(`Health: ${Math.max(0, Math.floor(playerHealth))}`, WIDTH - 15, 30);
+            ctx.fillText(`Base: ${Math.max(0, Math.floor(baseCoreHealth))}`, WIDTH - 15, 55);
+            ctx.fillText(`Score: ${score}`, WIDTH - 15, 80);
             
-            // Instructions
-            ctx.fillStyle = '#b0e0e6';
-            ctx.font = '12px Arial';
+            if (isPaused) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, WIDTH, HEIGHT);
+                ctx.fillStyle = '#64dd17';
+                ctx.font = 'bold 48px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('PAUSED', WIDTH / 2, HEIGHT / 2);
+            }
+        }
+        
+        function drawGameOver() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+            
+            ctx.fillStyle = '#FF4444';
+            ctx.font = 'bold 64px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('Click to place blocks | Press 1/2/3 for modes | X-L for weapons', WIDTH / 2, HEIGHT - 10);
+            ctx.fillText('GAME OVER', WIDTH / 2, 150);
+            
+            ctx.fillStyle = '#b0e0e6';
+            ctx.font = '24px Arial';
+            ctx.fillText(`Final Score: ${score}`, WIDTH / 2, 220);
+            ctx.fillText(`Waves Survived: ${wave - 1}`, WIDTH / 2, 260);
+            
+            ctx.fillStyle = '#64dd17';
+            ctx.fillRect(WIDTH / 2 - 150, 320, 300, 60);
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 28px Arial';
+            ctx.fillText('CLICK TO RESTART', WIDTH / 2, 360);
         }
         
         function updateGame() {
-            // Update enemies
-            enemies.forEach(enemy => {
-                enemy.update();
+            if (isPaused) return;
+            
+            const keys = window.keysPressed || {};
+            if (keys['w'] && playerY > 30) playerY -= 3;
+            if (keys['s'] && playerY < HEIGHT - 30) playerY += 3;
+            if (keys['a'] && playerX > 30) playerX -= 3;
+            if (keys['d'] && playerX < WIDTH - 30) playerX += 3;
+            
+            enemies.forEach(enemy => enemy.update());
+            projectiles.forEach(proj => proj.update());
+            
+            projectiles = projectiles.filter(p => p.life > 0);
+            
+            projectiles.forEach(proj => {
+                enemies = enemies.filter(enemy => {
+                    const dx = enemy.x - proj.x;
+                    const dy = enemy.y - proj.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                        enemy.health -= proj.damage;
+                        proj.life = 0;
+                        if (enemy.health <= 0) {
+                            score += enemy.experience;
+                            money += Math.floor(enemy.experience / 10);
+                        }
+                        return enemy.health > 0;
+                    }
+                    return true;
+                });
             });
             
-            // Remove dead enemies
             enemies = enemies.filter(e => e.health > 0);
             
-            // Check collision with player
             enemies.forEach(enemy => {
                 const dx = enemy.x - playerX;
                 const dy = enemy.y - playerY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 
                 if (dist < 40) {
-                    playerHealth -= 0.1;
-                    baseCoreHealth -= 0.05;
+                    playerHealth -= 0.05;
+                    baseCoreHealth -= 0.02;
                 }
             });
             
-            // Game over check
             if (baseCoreHealth <= 0) {
                 gameState = 'gameover';
             }
             
-            // Wave completion
-            if (enemies.length === 0 && wave > 0) {
+            if (enemies.length === 0 && Date.now() - lastWaveSpawn > 2000) {
                 wave++;
                 spawnWave();
             }
         }
         
         function spawnWave() {
-            const enemyCount = 3 + wave;
-            for (let i = 0; i < enemyCount; i++) {
-                const angle = (Math.PI * 2 * i) / enemyCount;
-                const x = WIDTH / 2 + Math.cos(angle) * 600;
-                const y = HEIGHT / 2 + Math.sin(angle) * 400;
+            const count = 3 + wave * 2;
+            for (let i = 0; i < count; i++) {
+                const angle = (Math.PI * 2 * i) / count;
+                const x = WIDTH / 2 + Math.cos(angle) * 500;
+                const y = HEIGHT / 2 + Math.sin(angle) * 350;
                 enemies.push(new Enemy(x, y));
             }
+            lastWaveSpawn = Date.now();
+        }
+        
+        function updateUI() {
+            document.getElementById('wave').textContent = wave;
+            document.getElementById('enemies').textContent = enemies.length;
+            document.getElementById('health').textContent = Math.max(0, Math.floor(playerHealth));
+            document.getElementById('basehealth').textContent = Math.max(0, Math.floor(baseCoreHealth));
+            document.getElementById('money').textContent = '$' + money;
+            document.getElementById('score').textContent = score;
         }
         
         function draw() {
-            if (gameState === 'menu') {
-                drawMenu();
-            } else if (gameState === 'playing') {
-                drawGame();
-            }
+            if (gameState === 'menu') drawMenu();
+            else if (gameState === 'playing') drawGame();
+            else if (gameState === 'gameover') drawGameOver();
         }
         
-        function update() {
-            if (gameState === 'playing') {
-                updateGame();
-            }
-        }
-        
-        // Input handling
-        const keys = {};
+        // Input
+        window.keysPressed = {};
         document.addEventListener('keydown', (e) => {
-            keys[e.key.toLowerCase()] = true;
+            window.keysPressed[e.key.toLowerCase()] = true;
             
             if (e.key === '1') activeMode = 'build';
             if (e.key === '2') activeMode = 'break';
             if (e.key === '3') activeMode = 'weapon';
-            
-            if (e.key.toLowerCase() === 'x') activeWeapon = 'sword';
-            if (e.key.toLowerCase() === 'c') activeWeapon = 'axe';
-            if (e.key.toLowerCase() === 'v') activeWeapon = 'spear';
+            if (e.key.toLowerCase() === 'p' && gameState === 'playing') isPaused = !isPaused;
+            if (e.key === 'Escape') gameState = 'menu';
         });
         
         document.addEventListener('keyup', (e) => {
-            keys[e.key.toLowerCase()] = false;
+            window.keysPressed[e.key.toLowerCase()] = false;
         });
         
-        // Mouse click
+        // Block selection UI
+        document.querySelectorAll('[data-block]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('[data-block]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedBlock = btn.dataset.block;
+            });
+        });
+        
+        // Mode selection UI
+        document.querySelectorAll('[data-mode]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeMode = btn.dataset.mode;
+            });
+        });
+        
+        // Canvas clicks
         canvas.addEventListener('click', (e) => {
             const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (canvas.height / rect.height);
             
             if (gameState === 'menu') {
-                // Start game
-                if (x > WIDTH / 2 - 150 && x < WIDTH / 2 + 150 && y > HEIGHT / 2 && y < HEIGHT / 2 + 60) {
+                if (x > WIDTH / 2 - 150 && x < WIDTH / 2 + 150 && y > HEIGHT / 2 && y < HEIGHT / 2 + 70) {
                     gameState = 'playing';
-                    enemies = [];
+                    playerHealth = 100;
+                    baseCoreHealth = 200;
+                    money = 500;
+                    score = 0;
+                    wave = 1;
                     blocks = [];
+                    enemies = [];
+                    projectiles = [];
                     spawnWave();
                 }
-            } else if (gameState === 'playing') {
+            } else if (gameState === 'gameover') {
+                if (x > WIDTH / 2 - 150 && x < WIDTH / 2 + 150 && y > 320 && y < 380) {
+                    gameState = 'menu';
+                }
+            } else if (gameState === 'playing' && !isPaused) {
                 if (activeMode === 'build' && money >= BLOCKS[selectedBlock].cost) {
                     const gridX = Math.floor(x / 40) * 40;
                     const gridY = Math.floor(y / 40) * 40;
-                    blocks.push(new Block(gridX, gridY, selectedBlock));
-                    money -= BLOCKS[selectedBlock].cost;
-                } else if (activeMode === 'weapon') {
-                    // Attack enemies
-                    enemies.forEach(enemy => {
-                        const dx = enemy.x - x;
-                        const dy = enemy.y - y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 100) {
-                            enemy.health -= 25;
-                            score += 10;
+                    let canBuild = true;
+                    blocks.forEach(b => {
+                        if (b.x === gridX && b.y === gridY) canBuild = false;
+                    });
+                    if (canBuild) {
+                        blocks.push(new Block(gridX, gridY, selectedBlock));
+                        money -= BLOCKS[selectedBlock].cost;
+                    }
+                } else if (activeMode === 'break') {
+                    blocks = blocks.filter(block => {
+                        if (block.collides(x, y)) {
+                            money += Math.floor(BLOCKS[block.type].cost * 0.5);
+                            return false;
                         }
+                        return true;
+                    });
+                } else if (activeMode === 'weapon') {
+                    enemies.forEach(enemy => {
+                        projectiles.push(new Projectile(playerX, playerY, enemy.x, enemy.y, 30));
                     });
                 }
             }
         });
         
-        // Player movement
-        function handleInput() {
-            if (keys['w'] && playerY > 20) playerY -= 3;
-            if (keys['s'] && playerY < HEIGHT - 20) playerY += 3;
-            if (keys['a'] && playerX > 20) playerX -= 3;
-            if (keys['d'] && playerX < WIDTH - 20) playerX += 3;
-        }
-        
-        // FPS counter
-        let fpsCounter = 0;
-        let lastTime = Date.now();
-        
+        // FPS
+        let fpsCount = 0, lastFps = Date.now();
         function updateFPS() {
-            fpsCounter++;
-            const currentTime = Date.now();
-            if (currentTime - lastTime >= 1000) {
-                document.getElementById('fps').textContent = `FPS: ${fpsCounter}`;
-                fpsCounter = 0;
-                lastTime = currentTime;
+            fpsCount++;
+            const now = Date.now();
+            if (now - lastFps >= 1000) {
+                document.getElementById('fps').textContent = `FPS: ${fpsCount}`;
+                fpsCount = 0;
+                lastFps = now;
             }
         }
         
-        // Game loop
+        // Main loop
         function gameLoop() {
-            handleInput();
-            update();
+            updateGame();
+            updateUI();
             draw();
             updateFPS();
             requestAnimationFrame(gameLoop);
         }
         
-        // Start game loop
         gameLoop();
     </script>
 </body>
