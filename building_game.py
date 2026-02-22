@@ -526,10 +526,18 @@ npc_buttons = {
 
 # Кнопки меню
 menu_buttons = [
-    Button(WIDTH // 2 - 200, 300, 400, 60, "CLASSIC MODE", (100, 200, 100), font_medium),
-    Button(WIDTH // 2 - 200, 400, 400, 60, "HARD MODE", (200, 50, 50), font_medium),
-    Button(WIDTH // 2 - 200, 500, 400, 60, "SURVIVAL MODE", (200, 150, 50), font_medium),
+    Button(WIDTH // 2 - 200, 280, 400, 60, "CLASSIC MODE", (100, 200, 100), font_medium),
+    Button(WIDTH // 2 - 200, 360, 400, 60, "HARD MODE", (200, 50, 50), font_medium),
+    Button(WIDTH // 2 - 200, 440, 400, 60, "SURVIVAL MODE", (200, 150, 50), font_medium),
 ]
+
+# Кнопки для меню настроек и помощи
+settings_back_btn = Button(WIDTH // 2 - 100, HEIGHT - 80, 200, 50, "BACK TO MENU", (150, 100, 100), font_medium)
+howtoplay_back_btn = Button(WIDTH // 2 - 100, HEIGHT - 80, 200, 50, "BACK TO MENU", (150, 100, 100), font_medium)
+
+# Дополнительные кнопки главного меню
+howtoplay_btn = Button(WIDTH // 2 - 200, 540, 190, 50, "HOW TO PLAY", (100, 150, 255), font_medium)
+settings_btn = Button(WIDTH // 2 + 10, 540, 190, 50, "SETTINGS", (200, 200, 100), font_medium)
 
 # Основной цикл
 running = True
@@ -558,6 +566,9 @@ def spawn_enemy():
     enemies.append(enemy)
 
 powerups = []  # Добавляем список power-ups
+menu_state = 'main'  # 'main', 'settings', 'howtoplay'
+volume = 50  # Громкость (от 0 до 100)
+difficulty_display = 'NORMAL'  # Отображение сложности
 
 def spawn_loot(x, y):
     # Враги выпадают случайный лут при смерти
@@ -1014,61 +1025,217 @@ while running:
     
     # ===== ГЛАВНОЕ МЕНЮ =====
     if game_state == 'menu':
-        # Отрисовка меню
-        # Фон с градиентом
-        for y in range(HEIGHT):
-            shade = int(20 + y / HEIGHT * 50)
-            pygame.draw.line(screen, (shade, shade // 2, shade + 50), (0, y), (WIDTH, y))
-        
-        # Заголовок с красивым форматированием
-        title = font_big.render("BASE DEFENSE", True, (100, 255, 100))
-        subtitle = font_medium.render("Tower Builder Strategy Game", True, (150, 150, 255))
-        
-        title_rect = title.get_rect(center=(WIDTH // 2, 80))
-        subtitle_rect = subtitle.get_rect(center=(WIDTH // 2, 150))
-        
-        # Рисуем декоративные линии вокруг заголовка
-        pygame.draw.line(screen, (100, 255, 100), (title_rect.left - 20, title_rect.top - 10), 
-                        (title_rect.left - 5, title_rect.top - 10), 3)
-        pygame.draw.line(screen, (100, 255, 100), (title_rect.right + 5, title_rect.top - 10), 
-                        (title_rect.right + 20, title_rect.top - 10), 3)
-        
-        screen.blit(title, title_rect)
-        screen.blit(subtitle, subtitle_rect)
-        
-        # Описание режимов
-        mode_descriptions = [
-            ("CLASSIC", "3 enemies, balanced difficulty"),
-            ("HARD", "5 enemies, intense combat"),
-            ("SURVIVAL", "4 enemies, endless waves")
-        ]
-        
-        # Обновление и отрисовка кнопок меню
-        for i, button in enumerate(menu_buttons):
-            button.update(mouse_pos)
-            button.draw(screen)
+        # ===== ГЛАВНОЕ МЕНЮ =====
+        if menu_state == 'main':
+            # Отрисовка меню
+            # Фон с градиентом
+            for y in range(HEIGHT):
+                shade = int(20 + y / HEIGHT * 50)
+                pygame.draw.line(screen, (shade, shade // 2, shade + 50), (0, y), (WIDTH, y))
             
-            # Добавляем описание под каждой кнопкой
-            desc_text = font_tiny.render(mode_descriptions[i][1], True, (200, 200, 200))
-            screen.blit(desc_text, (button.rect.centerx - desc_text.get_width() // 2, button.rect.bottom + 5))
+            # Заголовок с красивым форматированием
+            title = font_big.render("BASE DEFENSE", True, (100, 255, 100))
+            subtitle = font_medium.render("Tower Builder Strategy Game", True, (150, 150, 255))
+            
+            title_rect = title.get_rect(center=(WIDTH // 2, 80))
+            subtitle_rect = subtitle.get_rect(center=(WIDTH // 2, 150))
+            
+            # Рисуем декоративные линии вокруг заголовка
+            pygame.draw.line(screen, (100, 255, 100), (title_rect.left - 20, title_rect.top - 10), 
+                            (title_rect.left - 5, title_rect.top - 10), 3)
+            pygame.draw.line(screen, (100, 255, 100), (title_rect.right + 5, title_rect.top - 10), 
+                            (title_rect.right + 20, title_rect.top - 10), 3)
+            
+            screen.blit(title, title_rect)
+            screen.blit(subtitle, subtitle_rect)
+            
+            # Описание режимов
+            mode_descriptions = [
+                ("CLASSIC", "3 enemies, balanced difficulty"),
+                ("HARD", "5 enemies, intense combat"),
+                ("SURVIVAL", "4 enemies, endless waves")
+            ]
+            
+            # Обновление и отрисовка кнопок меню
+            for i, button in enumerate(menu_buttons):
+                button.update(mouse_pos)
+                button.draw(screen)
+                
+                # Добавляем описание под каждой кнопкой
+                desc_text = font_tiny.render(mode_descriptions[i][1], True, (200, 200, 200))
+                screen.blit(desc_text, (button.rect.centerx - desc_text.get_width() // 2, button.rect.bottom + 5))
+            
+            # Кнопки информации и настроек
+            howtoplay_btn.update(mouse_pos)
+            settings_btn.update(mouse_pos)
+            howtoplay_btn.draw(screen)
+            settings_btn.draw(screen)
+            
+        # ===== ЭКРАН КАК ИГРАТЬ =====
+        elif menu_state == 'howtoplay':
+            # Фон
+            for y in range(HEIGHT):
+                shade = int(30 + y / HEIGHT * 40)
+                pygame.draw.line(screen, (shade, shade, shade + 30), (0, y), (WIDTH, y))
+            
+            # Заголовок
+            title = font_big.render("HOW TO PLAY", True, (100, 255, 100))
+            screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 20))
+            
+            # Инструкции
+            instructions = [
+                "OBJECTIVE: Protect your Base Core from enemy waves",
+                "",
+                "BUILD MODE [Press 1]:",
+                "  • Click to place blocks around your base",
+                "  • Select block type from bottom-left panel",
+                "  • Cost: 30-400$ depending on block type",
+                "",
+                "BREAK MODE [Press 2]:",
+                "  • Click blocks to destroy and recover some money",
+                "  • Useful for repositioning defenses",
+                "",
+                "WEAPON MODE [Press 3]:",
+                "  • Click to attack enemies in range",
+                "  • Press X/C/V/Z/F/L to switch weapons",
+                "  • Different weapons have different damage & range",
+                "",
+                "HIRE UNITS [Bottom-Right Shop]:",
+                "  • Archer: $120 - Long range, fast attacks",
+                "  • Warrior: $150 - Melee, moderate damage",
+                "  • Mage: $140 - Medium range, balanced",
+                "  • Units auto-attack and last 10 seconds",
+                "",
+                "COMBAT: Defeat enemies to earn money and score",
+                "PROGRESSION: Each wave gets harder with more enemies",
+                "",
+                "CONTROLS: WASD-Move | ESC-Menu | P-Pause"
+            ]
+            
+            y_pos = 70
+            for line in instructions:
+                if line == "":
+                    y_pos += 10
+                else:
+                    color = (100, 200, 255) if line.startswith("  ") else (200, 255, 200) if ":" in line and not line.startswith("  ") else (220, 220, 220)
+                    text = font_tiny.render(line, True, color)
+                    screen.blit(text, (30, y_pos))
+                    y_pos += 22
+            
+            # Кнопка назад
+            howtoplay_back_btn.update(mouse_pos)
+            howtoplay_back_btn.draw(screen)
+        
+        # ===== ЭКРАН НАСТРОЕК =====
+        elif menu_state == 'settings':
+            # Фон
+            for y in range(HEIGHT):
+                shade = int(30 + y / HEIGHT * 40)
+                pygame.draw.line(screen, (shade + 20, shade, shade), (0, y), (WIDTH, y))
+            
+            # Заголовок
+            title = font_big.render("SETTINGS", True, (255, 200, 50))
+            screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 20))
+            
+            # Панель настроек
+            settings_panel = pygame.Rect(WIDTH // 2 - 300, 120, 600, 450)
+            pygame.draw.rect(screen, (50, 40, 40), settings_panel)
+            pygame.draw.rect(screen, (200, 150, 100), settings_panel, 3)
+            
+            # Громкость
+            volume_label = font_medium.render("VOLUME", True, (255, 200, 50))
+            screen.blit(volume_label, (WIDTH // 2 - 200, 150))
+            
+            # Ползунок громкости
+            slider_rect = pygame.Rect(WIDTH // 2 - 180, 210, 360, 20)
+            pygame.draw.rect(screen, (60, 60, 60), slider_rect)
+            pygame.draw.rect(screen, (200, 150, 100), slider_rect, 2)
+            
+            # Позиция ползунка
+            slider_pos = WIDTH // 2 - 180 + (volume / 100) * 360
+            pygame.draw.circle(screen, (100, 255, 100), (int(slider_pos), 220), 8)
+            
+            volume_text = font_small.render(f"{volume}%", True, (200, 255, 200))
+            screen.blit(volume_text, (slider_pos - 15, 235))
+            
+            # Сложность
+            difficulty_label = font_medium.render("DEFAULT DIFFICULTY", True, (255, 200, 50))
+            screen.blit(difficulty_label, (WIDTH // 2 - 200, 300))
+            
+            diff_buttons = [
+                Button(WIDTH // 2 - 180, 360, 110, 40, "CLASSIC", (100, 200, 100), font_small),
+                Button(WIDTH // 2 - 35, 360, 110, 40, "HARD", (200, 50, 50), font_small),
+                Button(WIDTH // 2 + 110, 360, 110, 40, "SURVIVAL", (200, 150, 50), font_small),
+            ]
+            
+            for btn in diff_buttons:
+                btn.update(mouse_pos)
+                btn.draw(screen)
+            
+            current_diff = font_small.render(f"Currently: {difficulty_display}", True, (200, 255, 200))
+            screen.blit(current_diff, (WIDTH // 2 - 100, 420))
+            
+            # Кнопка назад
+            settings_back_btn.update(mouse_pos)
+            settings_back_btn.draw(screen)
         
         # Обработка событий меню
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if menu_buttons[0].is_clicked(mouse_pos):  # Classic Mode
-                    game_state = 'playing'
-                    game_difficulty = 'normal'
-                    init_game()
-                elif menu_buttons[1].is_clicked(mouse_pos):  # Hard Mode
-                    game_state = 'playing'
-                    game_difficulty = 'hard'
-                    init_game()
-                elif menu_buttons[2].is_clicked(mouse_pos):  # Survival Mode
-                    game_state = 'playing'
-                    game_difficulty = 'survival'
-                    init_game()
+                if menu_state == 'main':
+                    # Кнопки режимов
+                    if menu_buttons[0].is_clicked(mouse_pos):  # Classic Mode
+                        game_state = 'playing'
+                        game_difficulty = 'normal'
+                        difficulty_display = 'CLASSIC'
+                        init_game()
+                    elif menu_buttons[1].is_clicked(mouse_pos):  # Hard Mode
+                        game_state = 'playing'
+                        game_difficulty = 'hard'
+                        difficulty_display = 'HARD'
+                        init_game()
+                    elif menu_buttons[2].is_clicked(mouse_pos):  # Survival Mode
+                        game_state = 'playing'
+                        game_difficulty = 'survival'
+                        difficulty_display = 'SURVIVAL'
+                        init_game()
+                    # Кнопки навигации
+                    elif howtoplay_btn.is_clicked(mouse_pos):
+                        menu_state = 'howtoplay'
+                    elif settings_btn.is_clicked(mouse_pos):
+                        menu_state = 'settings'
+                
+                elif menu_state == 'howtoplay':
+                    if howtoplay_back_btn.is_clicked(mouse_pos):
+                        menu_state = 'main'
+                
+                elif menu_state == 'settings':
+                    if settings_back_btn.is_clicked(mouse_pos):
+                        menu_state = 'main'
+                    
+                    # Обработка изменения сложности
+                    diff_buttons = [
+                        Button(WIDTH // 2 - 180, 360, 110, 40, "CLASSIC", (100, 200, 100), font_small),
+                        Button(WIDTH // 2 - 35, 360, 110, 40, "HARD", (200, 50, 50), font_small),
+                        Button(WIDTH // 2 + 110, 360, 110, 40, "SURVIVAL", (200, 150, 50), font_small),
+                    ]
+                    if diff_buttons[0].is_clicked(mouse_pos):
+                        difficulty_display = 'CLASSIC'
+                    elif diff_buttons[1].is_clicked(mouse_pos):
+                        difficulty_display = 'HARD'
+                    elif diff_buttons[2].is_clicked(mouse_pos):
+                        difficulty_display = 'SURVIVAL'
+            
+            # Обработка ползунка громкости при движении мыши
+            elif event.type == pygame.MOUSEMOTION and menu_state == 'settings':
+                slider_rect = pygame.Rect(WIDTH // 2 - 180, 210, 360, 20)
+                if slider_rect.collidepoint(event.pos):
+                    if pygame.mouse.get_pressed()[0]:  # Левая кнопка мыши нажата
+                        # Обновляем громкость на основе позиции мыши
+                        relative_x = event.pos[0] - slider_rect.left
+                        volume = max(0, min(100, int((relative_x / slider_rect.width) * 100)))
     
     # ===== ОСНОВНАЯ ИГРА =====
     elif game_state == 'playing':

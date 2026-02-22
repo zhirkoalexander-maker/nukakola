@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Defense - Tower Strategy Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: linear-gradient(90deg, #0f3460 0%, #533483 100%);
+            color: #64dd17;
+            padding: 40px 0;
+            text-align: center;
+            border-bottom: 4px solid #64dd17;
+        }
+        
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #64dd17; }
+            50% { text-shadow: 0 0 20px #64dd17, 0 0 30px #64dd17; }
+        }
+        
+        header p {
+            font-size: 1.3em;
+            color: #9966cc;
+            margin-bottom: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+            border-bottom: 2px dashed #533483;
+            margin-bottom: 40px;
+        }
+        
+        .hero-content {
+            background: rgba(15, 52, 96, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #64dd17;
+        }
+        
+        .hero h2 {
+            color: #64dd17;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .hero p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #b0e0e6;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #64dd17, #76ff03);
+            color: #000;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(100, 221, 23, 0.4);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(100, 221, 23, 0.6);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature-card {
+            background: rgba(15, 52, 96, 0.5);
+            border: 2px solid #533483;
+            border-radius: 8px;
+            padding: 25px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #64dd17;
+            box-shadow: 0 8px 15px rgba(100, 221, 23, 0.3);
+        }
+        
+        .feature-card h3 {
+            color: #64dd17;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .feature-card p {
+            color: #b0e0e6;
+            line-height: 1.8;
+        }
+        
+        .gameplay-modes {
+            background: rgba(15, 52, 96, 0.5);
+            border: 2px solid #533483;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .gameplay-modes h2 {
+            color: #64dd17;
+            margin-bottom: 25px;
+            font-size: 2em;
+            border-bottom: 2px solid #533483;
+            padding-bottom: 15px;
+        }
+        
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .mode-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #64dd17;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .mode-card h3 {
+            color: #76ff03;
+            margin-bottom: 10px;
+        }
+        
+        .mode-card p {
+            color: #b0e0e6;
+            margin-bottom: 8px;
+        }
+        
+        .controls-section {
+            background: rgba(15, 52, 96, 0.5);
+            border: 2px solid #533483;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .controls-section h2 {
+            color: #64dd17;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .control-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .control-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 3px solid #9966cc;
+        }
+        
+        .control-item strong {
+            color: #76ff03;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .game-items {
+            background: rgba(15, 52, 96, 0.5);
+            border: 2px solid #533483;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .game-items h2 {
+            color: #64dd17;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .item-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #533483;
+        }
+        
+        .item-card h4 {
+            color: #76ff03;
+            margin-bottom: 8px;
+        }
+        
+        .item-card p {
+            color: #b0e0e6;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+        
+        .installation {
+            background: rgba(15, 52, 96, 0.5);
+            border: 2px solid #533483;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        
+        .installation h2 {
+            color: #64dd17;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .installation ol {
+            color: #b0e0e6;
+            margin-left: 20px;
+        }
+        
+        .installation li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.5);
+            color: #76ff03;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        footer {
+            background: rgba(15, 52, 96, 0.8);
+            color: #b0e0e6;
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+            border-top: 2px solid #533483;
+        }
+        
+        footer a {
+            color: #64dd17;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .screenshot {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #533483;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tips-section {
+            background: rgba(15, 52, 96, 0.5);
+            border: 2px solid #ffa500;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .tips-section h3 {
+            color: #ffa500;
+            margin-bottom: 15px;
+        }
+        
+        .tips-section ul {
+            margin-left: 20px;
+            color: #b0e0e6;
+        }
+        
+        .tips-section li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚔️ BASE DEFENSE</h1>
+        <p>Tower Builder Strategy Game</p>
+    </header>
+    
+    <div class="container">
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Protect Your Base from Enemy Waves</h2>
+                <p>Build defensive structures, hire units, and engage in tactical combat</p>
+                <p>Are you ready to defend your core against endless waves of enemies?</p>
+                <a href="https://github.com/zhirkoalexander-maker/nukakola/releases" class="cta-button">📥 DOWNLOAD NOW</a>
+            </div>
+        </section>
+        
+        <section class="features">
+            <div class="feature-card">
+                <h3>🏗️ Dynamic Building System</h3>
+                <p>Build 10 different block types with varying costs, durability, and properties. Position them strategically around your base core.</p>
+            </div>
+            <div class="feature-card">
+                <h3>⚡ Combat System</h3>
+                <p>Choose from 6 powerful weapons with unique damage, range, and attack speed. Perfect your combat strategy.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🛡️ Hire Units</h3>
+                <p>Recruit Archers, Warriors, and Mages to fight alongside you. They auto-attack enemies for 10 seconds.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🌊 Enemy Variety</h3>
+                <p>Face 5 different enemy types with unique abilities. Zombies, Fast units, Heavy tanks, Ranged attackers, and Healers.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎮 Multiple Difficulty Modes</h3>
+                <p>Choose your challenge: Classic, Hard, or Survival with progressive difficulty and escalating enemy waves.</p>
+            </div>
+            <div class="feature-card">
+                <h3>💰 Economy System</h3>
+                <p>Earn money by defeating enemies and looting drops. Manage your resources wisely to build and hire units.</p>
+            </div>
+        </section>
+        
+        <section class="gameplay-modes">
+            <h2>Gameplay Modes</h2>
+            <div class="mode-grid">
+                <div class="mode-card">
+                    <h3>🎯 CLASSIC</h3>
+                    <p><strong>Difficulty:</strong> Balanced</p>
+                    <p><strong>Starting enemies:</strong> 3 per wave</p>
+                    <p><strong>Wave scaling:</strong> +2 enemies per 2 waves</p>
+                    <p>Perfect for learning the game mechanics</p>
+                </div>
+                <div class="mode-card">
+                    <h3>🔥 HARD</h3>
+                    <p><strong>Difficulty:</strong> Challenging</p>
+                    <p><strong>Starting enemies:</strong> 5 per wave</p>
+                    <p><strong>Wave scaling:</strong> +3 enemies per 2 waves</p>
+                    <p>Test your strategic skills and reflexes</p>
+                </div>
+                <div class="mode-card">
+                    <h3>💀 SURVIVAL</h3>
+                    <p><strong>Difficulty:</strong> Brutal</p>
+                    <p><strong>Starting enemies:</strong> 4 per wave</p>
+                    <p><strong>Wave scaling:</strong> +4 enemies per 2 waves (endless)</p>
+                    <p>Endless waves - how long can you survive?</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="controls-section">
+            <h2>Game Controls</h2>
+            <div class="control-group">
+                <div class="control-item">
+                    <strong>Movement</strong>
+                    <p>W/A/S/D - Move your character</p>
+                </div>
+                <div class="control-item">
+                    <strong>Modes</strong>
+                    <p>1 - Build Mode</p>
+                    <p>2 - Break Mode</p>
+                    <p>3 - Weapon Mode</p>
+                </div>
+                <div class="control-item">
+                    <strong>Weapons</strong>
+                    <p>X - Sword / C - Axe</p>
+                    <p>V - Spear / Z - Sniper</p>
+                    <p>F - Hammer / L - Laser</p>
+                </div>
+                <div class="control-item">
+                    <strong>Game</strong>
+                    <p>P - Pause/Resume</p>
+                    <p>ESC - Back to Menu</p>
+                    <p>Left Click - Use current mode</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="game-items">
+            <h2>Building Materials</h2>
+            <div class="items-grid">
+                <div class="item-card">
+                    <h4>🌳 WOOD - $40</h4>
+                    <p><strong>HP:</strong> 40</p>
+                    <p>Basic building block. Good for starting</p>
+                </div>
+                <div class="item-card">
+                    <h4>🪨 STONE - $80</h4>
+                    <p><strong>HP:</strong> 80</p>
+                    <p>Durable basic material</p>
+                </div>
+                <div class="item-card">
+                    <h4>🧱 BRICK - $60</h4>
+                    <p><strong>HP:</strong> 60</p>
+                    <p>Reliable defensive block</p>
+                </div>
+                <div class="item-card">
+                    <h4>🟩 GRASS - $30</h4>
+                    <p><strong>HP:</strong> 30</p>
+                    <p>Weakest but cheapest block</p>
+                </div>
+                <div class="item-card">
+                    <h4>🏜️ SAND - $25</h4>
+                    <p><strong>HP:</strong> 25</p>
+                    <p>Very weak temporary barrier</p>
+                </div>
+                <div class="item-card">
+                    <h4>⚙️ IRON - $150</h4>
+                    <p><strong>HP:</strong> 150</p>
+                    <p>Strong and reliable</p>
+                </div>
+                <div class="item-card">
+                    <h4>💎 CRYSTAL - $120</h4>
+                    <p><strong>HP:</strong> 120</p>
+                    <p>Magical protective barrier</p>
+                </div>
+                <div class="item-card">
+                    <h4>⬛ OBSIDIAN - $200</h4>
+                    <p><strong>HP:</strong> 200</p>
+                    <p>Very tough dark stone</p>
+                </div>
+                <div class="item-card">
+                    <h4>💍 DIAMOND - $300</h4>
+                    <p><strong>HP:</strong> 300</p>
+                    <p>Ultimate defensive material</p>
+                </div>
+                <div class="item-card">
+                    <h4>🔷 TITANIUM - $180</h4>
+                    <p><strong>HP:</strong> 180</p>
+                    <p>Advanced alloy material</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="tips-section">
+            <h3>⭐ Strategy Tips</h3>
+            <ul>
+                <li><strong>Defense First:</strong> Build defensive walls early to protect your base core</li>
+                <li><strong>Unit Synergy:</strong> Mix different unit types (Archer for range, Warrior for melee, Mage for support)</li>
+                <li><strong>Weapon Choice:</strong> Switch weapons based on enemy type. Sniper for single targets, Hammer for groups</li>
+                <li><strong>Money Management:</strong> Save money for emergencies but don't leave it unused</li>
+                <li><strong>Positioning:</strong> Keep your base core away from enemies. Build walls in strategic spots</li>
+                <li><strong>Wave Timing:</strong> Hire units between waves for maximum efficiency</li>
+                <li><strong>Learning Curve:</strong> Start with Classic mode to master the mechanics</li>
+            </ul>
+        </section>
+        
+        <section class="installation">
+            <h2>Installation & Setup</h2>
+            <ol>
+                <li><strong>Install Python 3.8+</strong>
+                    <br>Download from <a href="https://www.python.org" target="_blank">python.org</a>
+                </li>
+                <li><strong>Clone the Repository</strong>
+                    <br><code>git clone https://github.com/zhirkoalexander-maker/nukakola.git</code>
+                    <br><code>cd nukakola</code>
+                </li>
+                <li><strong>Install Pygame</strong>
+                    <br><code>pip install pygame</code>
+                </li>
+                <li><strong>Run the Game</strong>
+                    <br><code>python building_game.py</code>
+                </li>
+            </ol>
+            <div class="tips-section" style="margin-top: 20px; border-color: #64dd17;">
+                <h3 style="color: #64dd17;">System Requirements</h3>
+                <ul>
+                    <li>Python 3.8 or higher</li>
+                    <li>Pygame 2.0+</li>
+                    <li>1280x720 display minimum</li>
+                    <li>Windows, macOS, or Linux</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2024 Base Defense Game. All rights reserved.</p>
+        <p><a href="https://github.com/zhirkoalexander-maker/nukakola" target="_blank">🔗 View on GitHub</a> | <a href="https://github.com/zhirkoalexander-maker" target="_blank">👤 Author</a></p>
+        <p>Built with Pygame | Strategy tower defense game</p>
+    </footer>
+</body>
+</html>
