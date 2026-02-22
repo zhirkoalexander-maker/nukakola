@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Defense - Play Online</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #e0e0e0;
+        }
+        
+        .container {
+            text-align: center;
+            background: rgba(15, 52, 96, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            border: 2px solid #64dd17;
+        }
+        
+        h1 {
+            color: #64dd17;
+            margin-bottom: 20px;
+        }
+        
+        .status {
+            font-size: 1.1em;
+            margin: 20px 0;
+            color: #b0e0e6;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #64dd17;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        #canvas {
+            border: 2px solid #64dd17;
+            display: block;
+            margin: 20px auto;
+            background: #000;
+        }
+        
+        .info {
+            color: #ffa500;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        
+        .error {
+            color: #ff6b6b;
+        }
+        
+        a {
+            color: #64dd17;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚔️ BASE DEFENSE</h1>
+        <h2>Tower Builder Strategy Game</h2>
+        
+        <div class="status" id="status">
+            <span class="loading"></span>
+            <span>Загрузка игры...</span>
+        </div>
+        
+        <canvas id="canvas" width="1280" height="720"></canvas>
+        
+        <div class="info" id="info">
+            <p>Ключи управления:</p>
+            <p>WASD - движение | 1/2/3 - режимы | X/C/V/Z/F/L - оружие | P - пауза | ESC - меню</p>
+        </div>
+        
+        <p>
+            <a href="https://github.com/zhirkoalexander-maker/nukakola">📦 Исходный код на GitHub</a>
+        </p>
+    </div>
+    
+    <script async src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+    <script>
+        let pyodide;
+        
+        async function initPyodide() {
+            const statusEl = document.getElementById('status');
+            
+            try {
+                statusEl.innerHTML = '<span class="loading"></span><span>Инициализация Python...</span>';
+                
+                pyodide = await loadPyodide({
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
+                });
+                
+                statusEl.innerHTML = '<span class="loading"></span><span>Загрузка Pygame...</span>';
+                await pyodide.loadPackage("pygame");
+                
+                statusEl.innerHTML = '<span class="loading"></span><span>Загрузка игры...</span>';
+                
+                // Получаем код игры
+                const gameCode = await fetch('building_game_web.py').then(r => r.text());
+                
+                statusEl.innerHTML = '<span class="loading"></span><span>Запуск игры...</span>';
+                
+                // Запускаем игру
+                await pyodide.runPythonAsync(gameCode);
+                
+                statusEl.style.display = 'none';
+                
+            } catch (error) {
+                statusEl.innerHTML = `<span class="error">❌ Ошибка: ${error.message}</span>`;
+                console.error('Error:', error);
+            }
+        }
+        
+        window.addEventListener('load', initPyodide);
+    </script>
+</body>
+</html>
