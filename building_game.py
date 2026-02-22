@@ -2,6 +2,7 @@ import pygame
 import sys
 import random
 import math
+import os
 
 pygame.init()
 
@@ -14,6 +15,20 @@ font_big = pygame.font.Font(None, 48)
 font_medium = pygame.font.Font(None, 36)
 font_small = pygame.font.Font(None, 24)
 font_tiny = pygame.font.Font(None, 18)
+
+# Путь к текстурам
+TEXTURE_PATH = os.path.join(os.path.dirname(__file__), 'textures')
+def load_texture(name, size=(40, 40)):
+    """Загружает текстуру и масштабирует её"""
+    try:
+        path = os.path.join(TEXTURE_PATH, name)
+        if os.path.exists(path):
+            img = pygame.image.load(path)
+            return pygame.transform.scale(img, size)
+    except:
+        pass
+    # Возвращаем пустую поверхность если текстуры нет
+    return pygame.Surface(size)
 
 # Цвета с градиентами
 SKY_BLUE = (135, 206, 250)
@@ -29,18 +44,32 @@ DARK_BROWN = (101, 67, 33)
 # Класс текстурированного блока
 class Block:
     BLOCK_SIZE = 40
+    # Кэш загруженных текстур
+    TEXTURE_CACHE = {}
+    
     BLOCK_TYPES = {
-        'wood': {'color': DARK_BROWN, 'pattern': '█', 'health': 40, 'cost': 40},
-        'stone': {'color': (169, 169, 169), 'pattern': '■', 'health': 80, 'cost': 80},
-        'brick': {'color': (210, 105, 30), 'pattern': '▬', 'health': 60, 'cost': 70},
-        'grass': {'color': GROUND_GREEN, 'pattern': '▲', 'health': 30, 'cost': 30},
-        'sand': {'color': (238, 214, 175), 'pattern': '░', 'health': 25, 'cost': 25},
-        'iron': {'color': (100, 100, 100), 'pattern': '◆', 'health': 150, 'cost': 150},
-        'crystal': {'color': (100, 200, 255), 'pattern': '◇', 'health': 120, 'cost': 120},
-        'obsidian': {'color': (50, 20, 60), 'pattern': '■', 'health': 200, 'cost': 250},
-        'diamond': {'color': (150, 220, 255), 'pattern': '✦', 'health': 300, 'cost': 400},
-        'titanium': {'color': (180, 180, 200), 'pattern': '█', 'health': 180, 'cost': 200},
+        'wood': {'color': (139, 90, 43), 'health': 40, 'cost': 40, 'texture': None},
+        'stone': {'color': (169, 169, 169), 'health': 80, 'cost': 80, 'texture': None},
+        'brick': {'color': (210, 105, 30), 'health': 60, 'cost': 70, 'texture': 'Bricks002_1K-JPG_Color.jpg'},
+        'grass': {'color': (34, 139, 34), 'health': 30, 'cost': 30, 'texture': 'Grass001_1K-JPG_Color.jpg'},
+        'sand': {'color': (238, 214, 175), 'health': 25, 'cost': 25, 'texture': None},
+        'iron': {'color': (100, 100, 100), 'health': 150, 'cost': 150, 'texture': None},
+        'crystal': {'color': (100, 200, 255), 'health': 120, 'cost': 120, 'texture': None},
+        'obsidian': {'color': (50, 20, 60), 'health': 200, 'cost': 250, 'texture': None},
+        'diamond': {'color': (150, 220, 255), 'health': 300, 'cost': 400, 'texture': None},
+        'titanium': {'color': (180, 180, 200), 'health': 180, 'cost': 200, 'texture': None},
     }
+    
+    @classmethod
+    def get_texture(cls, block_type):
+        """Получает текстуру блока из кэша или загружает её"""
+        if block_type not in cls.TEXTURE_CACHE:
+            texture_name = cls.BLOCK_TYPES[block_type].get('texture')
+            if texture_name:
+                cls.TEXTURE_CACHE[block_type] = load_texture(texture_name, (cls.BLOCK_SIZE, cls.BLOCK_SIZE))
+            else:
+                cls.TEXTURE_CACHE[block_type] = None
+        return cls.TEXTURE_CACHE[block_type]
     
     def __init__(self, x, y, block_type='wood'):
         self.x = x
@@ -54,68 +83,47 @@ class Block:
         self.damage_flash = 0
     
     def draw(self, surface):
-        # Мигание при урыне
-        draw_color = self.color
+        # Получаем текстуру или используем цвет
+        texture = self.get_texture(self.block_type)
+        
+        # Мигание при уроне
         if self.damage_flash > 0:
-            draw_color = (255, 100, 100)
+            overlay = pygame.Surface((self.width, self.height))
+            overlay.fill((255, 100, 100))
+            overlay.set_alpha(100)
+            surface.blit(overlay, (self.x, self.y))
             self.damage_flash -= 1
         
-        # Основной блок
-        pygame.draw.rect(surface, draw_color, (self.x, self.y, self.width, self.height))
+        # Отрисовка текстуры если она есть
+        if texture:
+            surface.blit(texture, (self.x, self.y))
+        else:
+            # Отрисовка цвета если текстуры нет
+            draw_color = self.color
+            pygame.draw.rect(surface, draw_color, (self.x, self.y, self.width, self.height))
+            
+            # 3D эффект - боковая грань
+            darker_color = tuple(max(0, c - 40) for c in draw_color)
+            side_points = [
+                (self.x + self.width, self.y),
+                (self.x + self.width + 4, self.y - 4),
+                (self.x + self.width + 4, self.y + self.height - 4),
+                (self.x + self.width, self.y + self.height)
+            ]
+            pygame.draw.polygon(surface, darker_color, side_points)
+            
+            # 3D эффект - верхняя грань
+            lighter_color = tuple(min(255, c + 50) for c in draw_color)
+            top_points = [
+                (self.x, self.y),
+                (self.x + 4, self.y - 4),
+                (self.x + self.width + 4, self.y - 4),
+                (self.x + self.width, self.y)
+            ]
+            pygame.draw.polygon(surface, lighter_color, top_points)
         
-        # 3D эффект - боковая грань (с затемнением)
-        darker_color = tuple(max(0, c - 40) for c in draw_color)
-        side_points = [
-            (self.x + self.width, self.y),
-            (self.x + self.width + 4, self.y - 4),
-            (self.x + self.width + 4, self.y + self.height - 4),
-            (self.x + self.width, self.y + self.height)
-        ]
-        pygame.draw.polygon(surface, darker_color, side_points)
-        
-        # 3D эффект - верхняя грань (со светлением)
-        lighter_color = tuple(min(255, c + 50) for c in draw_color)
-        top_points = [
-            (self.x, self.y),
-            (self.x + 4, self.y - 4),
-            (self.x + self.width + 4, self.y - 4),
-            (self.x + self.width, self.y)
-        ]
-        pygame.draw.polygon(surface, lighter_color, top_points)
-        
-        # Основная передняя грань
-        pygame.draw.rect(surface, draw_color, (self.x, self.y, self.width, self.height))
-        
-        # Паттерн текстуры в зависимости от типа блока
-        if self.block_type == 'wood':
-            # Диагональные линии для дерева
-            for i in range(0, self.width, 6):
-                pygame.draw.line(surface, darker_color, (self.x + i, self.y), (self.x + i, self.y + self.height), 1)
-        elif self.block_type == 'stone':
-            # Крапчатый рисунок для камня
-            for i in range(5):
-                px = self.x + random.randint(2, self.width - 2)
-                py = self.y + random.randint(2, self.height - 2)
-                pygame.draw.circle(surface, darker_color, (px, py), 2)
-        elif self.block_type == 'brick':
-            # Разделения для кирпича
-            pygame.draw.line(surface, darker_color, (self.x + self.width // 2, self.y), (self.x + self.width // 2, self.y + self.height), 1)
-            pygame.draw.line(surface, darker_color, (self.x, self.y + self.height // 2), (self.x + self.width, self.y + self.height // 2), 1)
-        elif self.block_type == 'iron':
-            # Решетка для железа
-            for i in range(8, self.width, 8):
-                pygame.draw.line(surface, lighter_color, (self.x + i, self.y + 2), (self.x + i, self.y + self.height - 2), 1)
-            for i in range(8, self.height, 8):
-                pygame.draw.line(surface, lighter_color, (self.x + 2, self.y + i), (self.x + self.width - 2, self.y + i), 1)
-        
-        # Тень/граница для глубины
+        # Граница блока
         pygame.draw.rect(surface, (0, 0, 0), (self.x, self.y, self.width, self.height), 2)
-        
-        # Светлая полоса сверху (свет)
-        pygame.draw.line(surface, lighter_color, (self.x + 2, self.y + 2), (self.x + self.width - 2, self.y + 2), 3)
-        
-        # Темная полоса снизу (тень)
-        pygame.draw.line(surface, darker_color, (self.x + 2, self.y + self.height - 2), (self.x + self.width - 2, self.y + self.height - 2), 3)
         
         # Полоса здоровья блока (если он повреждён)
         if self.health < self.max_health:

@@ -333,8 +333,20 @@
                 <h2>Protect Your Base from Enemy Waves</h2>
                 <p>Build defensive structures, hire units, and engage in tactical combat</p>
                 <p>Are you ready to defend your core against endless waves of enemies?</p>
-                <a href="https://github.com/zhirkoalexander-maker/nukakola/releases" class="cta-button">📥 DOWNLOAD NOW</a>
+                <p style="color: #ffa500; font-weight: bold; margin-top: 15px;">⚠️ Desktop Application (Windows/Mac/Linux)</p>
+                <a href="https://github.com/zhirkoalexander-maker/nukakola/releases" class="cta-button">📥 DOWNLOAD & INSTALL</a>
             </div>
+        </section>
+        
+        <section class="tips-section" style="border-color: #ff6b6b; background: rgba(255, 107, 107, 0.1); margin: 30px 0;">
+            <h3 style="color: #ff6b6b;">🎮 About This Game</h3>
+            <ul>
+                <li><strong>Platform:</strong> Desktop application (not a web game)</li>
+                <li><strong>Requires:</strong> Python 3.8+ and Pygame 2.0+</li>
+                <li><strong>OS Support:</strong> Windows, macOS, Linux</li>
+                <li><strong>Installation time:</strong> ~5 minutes</li>
+                <li><strong>Game size:</strong> ~5 MB (plus texture files)</li>
+            </ul>
         </section>
         
         <section class="features">
@@ -489,30 +501,62 @@
         </section>
         
         <section class="installation">
-            <h2>Installation & Setup</h2>
+            <h2>⚡ Quick Start Installation</h2>
+            
+            <h3 style="color: #64dd17; margin-top: 20px; margin-bottom: 10px;">Step 1: Install Python</h3>
+            <ul>
+                <li><strong>Windows/Mac/Linux:</strong> Download from <a href="https://www.python.org" target="_blank">python.org</a> (version 3.8 or higher)</li>
+                <li>During installation, <strong>CHECK</strong> "Add Python to PATH"</li>
+                <li>Verify: Open terminal/command prompt and type: <code>python --version</code></li>
+            </ul>
+            
+            <h3 style="color: #64dd17; margin-top: 20px; margin-bottom: 10px;">Step 2: Clone Repository</h3>
             <ol>
-                <li><strong>Install Python 3.8+</strong>
-                    <br>Download from <a href="https://www.python.org" target="_blank">python.org</a>
-                </li>
-                <li><strong>Clone the Repository</strong>
-                    <br><code>git clone https://github.com/zhirkoalexander-maker/nukakola.git</code>
-                    <br><code>cd nukakola</code>
-                </li>
-                <li><strong>Install Pygame</strong>
-                    <br><code>pip install pygame</code>
-                </li>
-                <li><strong>Run the Game</strong>
-                    <br><code>python building_game.py</code>
-                </li>
+                <li>Open terminal/command prompt in desired folder</li>
+                <li>Run: <code>git clone https://github.com/zhirkoalexander-maker/nukakola.git</code></li>
+                <li>Navigate: <code>cd nukakola</code></li>
             </ol>
+            
+            <h3 style="color: #64dd17; margin-top: 20px; margin-bottom: 10px;">Step 3: Install Pygame</h3>
+            <p>Run in terminal/command prompt:</p>
+            <code style="display: block; padding: 10px; background: #000; margin: 10px 0;">pip install pygame</code>
+            
+            <h3 style="color: #64dd17; margin-top: 20px; margin-bottom: 10px;">Step 4: Run the Game</h3>
+            <p>Run in terminal/command prompt:</p>
+            <code style="display: block; padding: 10px; background: #000; margin: 10px 0;">python building_game.py</code>
+            
             <div class="tips-section" style="margin-top: 20px; border-color: #64dd17;">
-                <h3 style="color: #64dd17;">System Requirements</h3>
+                <h3 style="color: #64dd17;">⚠️ Troubleshooting</h3>
                 <ul>
-                    <li>Python 3.8 or higher</li>
-                    <li>Pygame 2.0+</li>
-                    <li>1280x720 display minimum</li>
-                    <li>Windows, macOS, or Linux</li>
+                    <li><strong>"ModuleNotFoundError: pygame"</strong> → Run: <code>pip install pygame</code></li>
+                    <li><strong>"Python not found"</strong> → Restart terminal after Python installation</li>
+                    <li><strong>"Command not found"</strong> → Use full path to python: <code>/usr/bin/python3 building_game.py</code> (Mac/Linux)</li>
+                    <li><strong>Game runs slow</strong> → Close other applications or update graphics drivers</li>
                 </ul>
+            </div>
+        </section>
+        
+        <section style="background: rgba(15, 52, 96, 0.5); border: 2px solid #64dd17; border-radius: 8px; padding: 25px; margin: 40px 0;">
+            <h2 style="color: #64dd17; margin-bottom: 15px;">📋 System Requirements</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div>
+                    <strong style="color: #76ff03;">Minimum:</strong>
+                    <ul style="color: #b0e0e6; margin-top: 8px;">
+                        <li>Python 3.8+</li>
+                        <li>Pygame 2.0+</li>
+                        <li>1GB RAM</li>
+                        <li>1280x720 display</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong style="color: #76ff03;">Recommended:</strong>
+                    <ul style="color: #b0e0e6; margin-top: 8px;">
+                        <li>Python 3.9+</li>
+                        <li>Pygame 2.1+</li>
+                        <li>4GB RAM</li>
+                        <li>1920x1080 display</li>
+                    </ul>
+                </div>
             </div>
         </section>
     </div>
