@@ -1,0 +1,10 @@
+title: Base Defense - Tower Strategy Game
+description: Strategic tower defense game built with Python and Pygame
+show_downloads: true
+github:
+  repository_url: https://github.com/zhirkoalexander-maker/nukakola
+  zip_url: https://github.com/zhirkoalexander-maker/nukakola/archive/refs/heads/main.zip
+  tar_url: https://github.com/zhirkoalexander-maker/nukakola/archive/refs/heads/main.tar.gz
+
+# GitHub Pages theme (optional)
+remote_theme: jekyll/minima
