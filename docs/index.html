@@ -391,34 +391,62 @@
             }
             
             draw() {
+                // Main block color with gradient effect
                 ctx.fillStyle = BLOCK_TYPES[this.type].color;
                 ctx.fillRect(this.x, this.y, 40, 40);
                 
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-                for (let i = 0; i < 40; i += 5) {
-                    ctx.fillRect(this.x + i, this.y, 2, 40);
+                // Dark shadow for 3D depth on right and bottom
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+                ctx.fillRect(this.x, this.y + 36, 40, 4);
+                ctx.fillRect(this.x + 36, this.y, 4, 40);
+                
+                // Fine grid texture pattern for surface detail
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.12)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i <= 40; i += 4) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x + i, this.y);
+                    ctx.lineTo(this.x + i, this.y + 40);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y + i);
+                    ctx.lineTo(this.x + 40, this.y + i);
+                    ctx.stroke();
                 }
-                for (let i = 0; i < 40; i += 5) {
-                    ctx.fillRect(this.x, this.y + i, 40, 2);
+                
+                // Random darker spots for texture variation
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                for (let i = 0; i < 4; i++) {
+                    const spotX = this.x + 8 + i * 10;
+                    const spotY = this.y + 8 + (i % 2) * 15;
+                    ctx.fillRect(spotX, spotY, 3, 3);
                 }
                 
                 if (this.type === 'dynamite') {
                     ctx.fillStyle = '#FF4400';
                     ctx.fillRect(this.x + 15, this.y + 5, 10, 15);
+                    ctx.fillStyle = '#FFAA00';
+                    ctx.fillRect(this.x + 16, this.y + 6, 4, 8);
                 }
                 
-                ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-                ctx.lineWidth = 2;
+                // Block border with slight highlight
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+                ctx.lineWidth = 1.5;
                 ctx.strokeRect(this.x, this.y, 40, 40);
                 
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-                ctx.fillRect(this.x, this.y, 8, 8);
+                // Light highlight on top-left for 3D effect
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(this.x + 1, this.y + 1, 38, 38);
                 
+                // Health bar if damaged
                 if (this.health < this.maxHealth) {
                     const healthPercent = this.health / this.maxHealth;
-                    ctx.fillStyle = '#C41C3B';
+                    // Red background
+                    ctx.fillStyle = '#8B0000';
                     ctx.fillRect(this.x, this.y + 37, 40, 3);
-                    ctx.fillStyle = '#00C800';
+                    // Green health bar
+                    ctx.fillStyle = '#00AA00';
                     ctx.fillRect(this.x, this.y + 37, 40 * healthPercent, 3);
                 }
             }
@@ -443,24 +471,71 @@
             }
             
             draw() {
-                const colors = ['#FF4444', '#FF8844', '#FFFF44', '#44FF44', '#4444FF'];
+                // Zombie body - greenish-brown decaying flesh
+                const colors = ['#5A7D3D', '#6B8E3F', '#557540', '#6B7D4D', '#5C6D3E'];
                 ctx.fillStyle = colors[this.type];
                 ctx.fillRect(this.x, this.y, this.width, this.height);
                 
-                ctx.fillStyle = '#FF0000';
-                ctx.fillRect(this.x + 3, this.y + 4, 3, 3);
-                ctx.fillRect(this.x + 14, this.y + 4, 3, 3);
+                // Darker shade on back for depth
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+                ctx.fillRect(this.x + 1, this.y + 8, 18, 12);
                 
-                ctx.strokeStyle = '#000';
-                ctx.lineWidth = 1;
+                // Glowing red eyes - intense and menacing
+                ctx.fillStyle = '#FF2020';
+                ctx.shadowColor = '#FF0000';
+                ctx.shadowBlur = 8;
                 ctx.beginPath();
-                ctx.moveTo(this.x + 6, this.y + 12);
-                ctx.lineTo(this.x + 14, this.y + 12);
+                ctx.arc(this.x + 5, this.y + 6, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x + 15, this.y + 6, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowColor = 'transparent';
+                
+                // Eye glow/aura around eyes
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+                ctx.beginPath();
+                ctx.arc(this.x + 5, this.y + 6, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(this.x + 15, this.y + 6, 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Mouth - scary grin
+                ctx.strokeStyle = '#1a1a1a';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(this.x + 10, this.y + 14, 3, 0, Math.PI);
                 ctx.stroke();
                 
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-                ctx.fillRect(this.x - 3, this.y + 5, 4, 10);
-                ctx.fillRect(this.x + this.width - 1, this.y + 5, 4, 10);
+                // Teeth-like marks
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 0.8;
+                for (let i = 0; i < 4; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x + 7 + i * 1.5, this.y + 14);
+                    ctx.lineTo(this.x + 7.5 + i * 1.5, this.y + 15.5);
+                    ctx.stroke();
+                }
+                
+                // Arms raised in attacking pose
+                ctx.fillStyle = colors[this.type];
+                ctx.fillRect(this.x - 4, this.y + 3, 4, 13);
+                ctx.fillRect(this.x + this.width, this.y + 3, 4, 13);
+                
+                // Clawed hands
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x - 2, this.y + 5 + i * 3);
+                    ctx.lineTo(this.x - 4, this.y + 4 + i * 3);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(this.x + this.width + 2, this.y + 5 + i * 3);
+                    ctx.lineTo(this.x + this.width + 4, this.y + 4 + i * 3);
+                    ctx.stroke();
+                }
                 
                 ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
                 ctx.lineWidth = 1;
@@ -694,9 +769,10 @@
                 );
                 
                 if (distToPlayer < 30) {
-                    gameState.health -= 3;
-                    enemies[i].attackCooldown = 30;
-                    enemies.splice(i, 1);
+                    if (enemies[i].attackCooldown === 0) {
+                        gameState.health -= 3;
+                        enemies[i].attackCooldown = 45;
+                    }
                 }
             }
             
