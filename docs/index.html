@@ -538,7 +538,13 @@
                 const blockY = Math.floor(y / 40) * 40;
                 const cost = BLOCK_TYPES[gameState.selectedBlock].cost;
                 
-                if (gameState.money >= cost && !blocks.some(b => b.x === blockX && b.y === blockY)) {
+                // Check if block overlaps with player
+                const blockOverlapsPlayer = blockX < player.x + player.width && 
+                                           blockX + 40 > player.x &&
+                                           blockY < player.y + player.height &&
+                                           blockY + 40 > player.y;
+                
+                if (gameState.money >= cost && !blocks.some(b => b.x === blockX && b.y === blockY) && !blockOverlapsPlayer) {
                     blocks.push(new Block(blockX, blockY, gameState.selectedBlock));
                     gameState.money -= cost;
                 }
@@ -671,7 +677,11 @@
                     if (enemies[i].x < block.x + 40 && enemies[i].x + enemies[i].width > block.x &&
                         enemies[i].y < block.y + 40 && enemies[i].y + enemies[i].height > block.y) {
                         
-                        if (block.takeDamage(5)) {
+                        // Damage depends on block durability - stronger blocks take longer to break
+                        const baseDamage = 5;
+                        const damageToBlock = baseDamage * (40 / block.maxHealth);
+                        
+                        if (block.takeDamage(damageToBlock)) {
                             blocks.splice(j, 1);
                         }
                     }
