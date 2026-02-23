@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base Defense - Tower Strategy Game</title>
+    <title>Base Defense - Tower Builder</title>
     <style>
         * {
             margin: 0;
@@ -12,609 +12,570 @@
         }
         
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
-            min-height: 100vh;
-        }
-        
-        header {
-            background: linear-gradient(90deg, #0f3460 0%, #533483 100%);
-            color: #64dd17;
-            padding: 40px 0;
-            text-align: center;
-            border-bottom: 4px solid #64dd17;
-        }
-        
-        header h1 {
-            font-size: 3.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            animation: glow 2s ease-in-out infinite;
-        }
-        
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 10px #64dd17; }
-            50% { text-shadow: 0 0 20px #64dd17, 0 0 30px #64dd17; }
-        }
-        
-        header p {
-            font-size: 1.3em;
-            color: #9966cc;
-            margin-bottom: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .hero {
-            text-align: center;
-            padding: 60px 0;
-            border-bottom: 2px dashed #533483;
-            margin-bottom: 40px;
-        }
-        
-        .hero-content {
-            background: rgba(15, 52, 96, 0.7);
-            padding: 30px;
-            border-radius: 10px;
-            border-left: 4px solid #64dd17;
-        }
-        
-        .hero h2 {
-            color: #64dd17;
-            font-size: 2em;
-            margin-bottom: 15px;
-        }
-        
-        .hero p {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            color: #b0e0e6;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(90deg, #64dd17, #76ff03);
-            color: #000;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 1.1em;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(100, 221, 23, 0.4);
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(100, 221, 23, 0.6);
-        }
-        
-        .download-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .download-btn, .github-btn {
-            padding: 20px 30px;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
-            text-align: center;
-            display: block;
-            border: 3px solid;
-        }
-        
-        .download-btn {
-            background: linear-gradient(90deg, #00ff00, #00cc00);
-            color: #000;
-            border-color: #00ff00;
-        }
-        
-        .download-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
-        }
-        
-        .github-btn {
-            background: linear-gradient(90deg, #ff6b6b, #ff4444);
-            color: #fff;
-            border-color: #ff6b6b;
-        }
-        
-        .github-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin: 50px 0;
-        }
-        
-        .feature-card {
-            background: rgba(15, 52, 96, 0.5);
-            border: 2px solid #533483;
-            border-radius: 8px;
-            padding: 25px;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: #64dd17;
-            box-shadow: 0 8px 15px rgba(100, 221, 23, 0.3);
-        }
-        
-        .feature-card h3 {
-            color: #64dd17;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-        
-        .feature-card p {
-            color: #b0e0e6;
-            line-height: 1.8;
-        }
-        
-        .gameplay-modes {
-            background: rgba(15, 52, 96, 0.5);
-            border: 2px solid #533483;
-            border-radius: 8px;
-            padding: 30px;
-            margin: 40px 0;
-        }
-        
-        .gameplay-modes h2 {
-            color: #64dd17;
-            margin-bottom: 25px;
-            font-size: 2em;
-            border-bottom: 2px solid #533483;
-            padding-bottom: 15px;
-        }
-        
-        .mode-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        
-        .mode-card {
-            background: rgba(0, 0, 0, 0.3);
-            border-left: 4px solid #64dd17;
-            padding: 20px;
-            border-radius: 5px;
-        }
-        
-        .mode-card h3 {
-            color: #76ff03;
-            margin-bottom: 10px;
-        }
-        
-        .mode-card p {
-            color: #b0e0e6;
-            margin-bottom: 8px;
-        }
-        
-        .controls-section {
-            background: rgba(15, 52, 96, 0.5);
-            border: 2px solid #533483;
-            border-radius: 8px;
-            padding: 30px;
-            margin: 40px 0;
-        }
-        
-        .controls-section h2 {
-            color: #64dd17;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-        
-        .control-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .control-item {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 3px solid #9966cc;
-        }
-        
-        .control-item strong {
-            color: #76ff03;
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .game-items {
-            background: rgba(15, 52, 96, 0.5);
-            border: 2px solid #533483;
-            border-radius: 8px;
-            padding: 30px;
-            margin: 40px 0;
-        }
-        
-        .game-items h2 {
-            color: #64dd17;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-        
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
-        .item-card {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #533483;
-        }
-        
-        .item-card h4 {
-            color: #76ff03;
-            margin-bottom: 8px;
-        }
-        
-        .item-card p {
-            color: #b0e0e6;
-            font-size: 0.95em;
-            margin-bottom: 5px;
-        }
-        
-        .installation {
-            background: rgba(15, 52, 96, 0.5);
-            border: 2px solid #533483;
-            border-radius: 8px;
-            padding: 30px;
-            margin: 40px 0;
-        }
-        
-        .installation h2 {
-            color: #64dd17;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-        
-        .installation ol {
-            color: #b0e0e6;
-            margin-left: 20px;
-        }
-        
-        .installation li {
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-        
-        code {
-            background: rgba(0, 0, 0, 0.5);
-            color: #76ff03;
-            padding: 3px 8px;
-            border-radius: 3px;
             font-family: 'Courier New', monospace;
-        }
-        
-        footer {
-            background: rgba(15, 52, 96, 0.8);
-            color: #b0e0e6;
-            text-align: center;
-            padding: 30px;
-            margin-top: 60px;
-            border-top: 2px solid #533483;
-        }
-        
-        footer a {
             color: #64dd17;
-            text-decoration: none;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        footer a:hover {
-            text-decoration: underline;
+        .game-container {
+            width: 100%;
+            max-width: 1400px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid #64dd17;
+            box-shadow: 0 0 30px #64dd17;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
         }
         
-        .screenshot {
-            max-width: 100%;
-            border-radius: 8px;
-            margin: 20px 0;
-            border: 2px solid #533483;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        canvas {
+            flex: 1;
+            background: #000;
+            border: 2px solid #64dd17;
+            display: block;
+            aspect-ratio: 16 / 9;
         }
         
-        .tips-section {
-            background: rgba(15, 52, 96, 0.5);
-            border: 2px solid #ffa500;
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
+        .sidebar {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #64dd17;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: 720px;
         }
         
-        .tips-section h3 {
-            color: #ffa500;
-            margin-bottom: 15px;
+        .stat-box {
+            background: rgba(100, 221, 23, 0.1);
+            border: 1px solid #64dd17;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
         }
         
-        .tips-section ul {
-            margin-left: 20px;
-            color: #b0e0e6;
+        .stat-label {
+            color: #64dd17;
+            font-weight: bold;
         }
         
-        .tips-section li {
-            margin-bottom: 8px;
+        .stat-value {
+            color: #a8ff00;
+            font-size: 1.2em;
+            margin-top: 3px;
+        }
+        
+        .section-title {
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ff6b6b;
+            padding-bottom: 5px;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 5px;
+        }
+        
+        .btn {
+            padding: 8px;
+            background: rgba(100, 221, 23, 0.2);
+            color: #64dd17;
+            border: 1px solid #64dd17;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+        
+        .btn:hover {
+            background: rgba(100, 221, 23, 0.5);
+        }
+        
+        .btn.active {
+            background: #64dd17;
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .weapon-btn {
+            display: inline-block;
+            width: calc(50% - 3px);
+            padding: 6px;
+            background: rgba(255, 100, 100, 0.2);
+            color: #ff9999;
+            border: 1px solid #ff6666;
+            cursor: pointer;
+            font-size: 0.7em;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .weapon-btn:hover {
+            background: rgba(255, 100, 100, 0.5);
+        }
+        
+        .weapon-btn.active {
+            background: #ff6666;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #64dd17;
+            text-shadow: 0 0 10px #64dd17;
+        }
+        
+        .mode-btn {
+            padding: 8px;
+            background: rgba(200, 100, 150, 0.2);
+            color: #ff99cc;
+            border: 1px solid #cc6699;
+            cursor: pointer;
+            font-size: 0.85em;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        .mode-btn.active {
+            background: #cc6699;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #ff6b6b;
+            padding: 30px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            min-width: 350px;
+        }
+        
+        .modal.show {
+            display: block;
+        }
+        
+        .modal h2 {
+            color: #ff6b6b;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .modal p {
+            color: #64dd17;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .modal button {
+            padding: 10px 20px;
+            background: #64dd17;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>⚔️ BASE DEFENSE</h1>
-        <p>Tower Builder Strategy Game</p>
-    </header>
-    
-    <div class="container">
-        <section class="hero">
-            <div class="hero-content">
-                <h2>Protect Your Base from Enemy Waves</h2>
-                <p>Build defensive structures, hire units, and engage in tactical combat</p>
-                <p>Are you ready to defend your core against endless waves of enemies?</p>
-                <p style="color: #ffa500; font-weight: bold; margin-top: 15px;">⚠️ Desktop Application (Windows/Mac/Linux)</p>
-                
-                <!-- Download Buttons -->
-                <div class="download-section">
-                    <a href="docs/game.html" class="download-btn">
-                        🎮 PLAY ONLINE NOW
-                    </a>
-                    <a href="https://github.com/zhirkoalexander-maker/nukakola/blob/main/building_game.py" class="github-btn" target="_blank">
-                        📝 VIEW SOURCE CODE
-                    </a>
-                </div>
+    <div class="game-container">
+        <div style="flex: 1;">
+            <div class="header">
+                <h1>BASE DEFENSE - TOWER BUILDER</h1>
             </div>
-        </section>
+            <canvas id="gameCanvas" width="1280" height="720"></canvas>
+        </div>
         
-        <section class="tips-section" style="border-color: #ff6b6b; background: rgba(255, 107, 107, 0.1); margin: 30px 0;">
-            <h3 style="color: #ff6b6b;">🎮 About This Game</h3>
-            <ul>
-                <li><strong>Platform:</strong> Desktop application (not a web game)</li>
-                <li><strong>Requires:</strong> Python 3.8+ and Pygame 2.0+</li>
-                <li><strong>OS Support:</strong> Windows, macOS, Linux</li>
-                <li><strong>Installation time:</strong> ~5 minutes</li>
-                <li><strong>Game size:</strong> ~5 MB (plus texture files)</li>
-            </ul>
-        </section>
-        
-        <section class="features">
-            <div class="feature-card">
-                <h3>🏗️ Dynamic Building System</h3>
-                <p>Build 10 different block types with varying costs, durability, and properties. Position them strategically around your base core.</p>
+        <div class="sidebar">
+            <div class="stat-box">
+                <div class="stat-label">MONEY</div>
+                <div class="stat-value" id="money">500</div>
             </div>
-            <div class="feature-card">
-                <h3>⚡ Combat System</h3>
-                <p>Choose from 6 powerful weapons with unique damage, range, and attack speed. Perfect your combat strategy.</p>
-            </div>
-            <div class="feature-card">
-                <h3>🛡️ Hire Units</h3>
-                <p>Recruit Archers, Warriors, and Mages to fight alongside you. They auto-attack enemies for 10 seconds.</p>
-            </div>
-            <div class="feature-card">
-                <h3>🌊 Enemy Variety</h3>
-                <p>Face 5 different enemy types with unique abilities. Zombies, Fast units, Heavy tanks, Ranged attackers, and Healers.</p>
-            </div>
-            <div class="feature-card">
-                <h3>🎮 Multiple Difficulty Modes</h3>
-                <p>Choose your challenge: Classic, Hard, or Survival with progressive difficulty and escalating enemy waves.</p>
-            </div>
-            <div class="feature-card">
-                <h3>💰 Economy System</h3>
-                <p>Earn money by defeating enemies and looting drops. Manage your resources wisely to build and hire units.</p>
-            </div>
-        </section>
-        
-        <section class="gameplay-modes">
-            <h2>Gameplay Modes</h2>
-            <div class="mode-grid">
-                <div class="mode-card">
-                    <h3>🎯 CLASSIC</h3>
-                    <p><strong>Difficulty:</strong> Balanced</p>
-                    <p><strong>Starting enemies:</strong> 3 per wave</p>
-                    <p><strong>Wave scaling:</strong> +2 enemies per 2 waves</p>
-                    <p>Perfect for learning the game mechanics</p>
-                </div>
-                <div class="mode-card">
-                    <h3>🔥 HARD</h3>
-                    <p><strong>Difficulty:</strong> Challenging</p>
-                    <p><strong>Starting enemies:</strong> 5 per wave</p>
-                    <p><strong>Wave scaling:</strong> +3 enemies per 2 waves</p>
-                    <p>Test your strategic skills and reflexes</p>
-                </div>
-                <div class="mode-card">
-                    <h3>💀 SURVIVAL</h3>
-                    <p><strong>Difficulty:</strong> Brutal</p>
-                    <p><strong>Starting enemies:</strong> 4 per wave</p>
-                    <p><strong>Wave scaling:</strong> +4 enemies per 2 waves (endless)</p>
-                    <p>Endless waves - how long can you survive?</p>
-                </div>
-            </div>
-        </section>
-        
-        <section class="controls-section">
-            <h2>Game Controls</h2>
-            <div class="control-group">
-                <div class="control-item">
-                    <strong>Movement</strong>
-                    <p>W/A/S/D - Move your character</p>
-                </div>
-                <div class="control-item">
-                    <strong>Modes</strong>
-                    <p>1 - Build Mode</p>
-                    <p>2 - Break Mode</p>
-                    <p>3 - Weapon Mode</p>
-                </div>
-                <div class="control-item">
-                    <strong>Weapons</strong>
-                    <p>X - Sword / C - Axe</p>
-                    <p>V - Spear / Z - Sniper</p>
-                    <p>F - Hammer / L - Laser</p>
-                </div>
-                <div class="control-item">
-                    <strong>Game</strong>
-                    <p>P - Pause/Resume</p>
-                    <p>ESC - Back to Menu</p>
-                    <p>Left Click - Use current mode</p>
-                </div>
-            </div>
-        </section>
-        
-        <section class="game-items">
-            <h2>Building Materials</h2>
-            <div class="items-grid">
-                <div class="item-card">
-                    <h4>🌳 WOOD - $40</h4>
-                    <p><strong>HP:</strong> 40</p>
-                    <p>Basic building block. Good for starting</p>
-                </div>
-                <div class="item-card">
-                    <h4>🪨 STONE - $80</h4>
-                    <p><strong>HP:</strong> 80</p>
-                    <p>Durable basic material</p>
-                </div>
-                <div class="item-card">
-                    <h4>🧱 BRICK - $60</h4>
-                    <p><strong>HP:</strong> 60</p>
-                    <p>Reliable defensive block</p>
-                </div>
-                <div class="item-card">
-                    <h4>🟩 GRASS - $30</h4>
-                    <p><strong>HP:</strong> 30</p>
-                    <p>Weakest but cheapest block</p>
-                </div>
-                <div class="item-card">
-                    <h4>🏜️ SAND - $25</h4>
-                    <p><strong>HP:</strong> 25</p>
-                    <p>Very weak temporary barrier</p>
-                </div>
-                <div class="item-card">
-                    <h4>⚙️ IRON - $150</h4>
-                    <p><strong>HP:</strong> 150</p>
-                    <p>Strong and reliable</p>
-                </div>
-                <div class="item-card">
-                    <h4>💎 CRYSTAL - $120</h4>
-                    <p><strong>HP:</strong> 120</p>
-                    <p>Magical protective barrier</p>
-                </div>
-                <div class="item-card">
-                    <h4>⬛ OBSIDIAN - $200</h4>
-                    <p><strong>HP:</strong> 200</p>
-                    <p>Very tough dark stone</p>
-                </div>
-                <div class="item-card">
-                    <h4>💍 DIAMOND - $300</h4>
-                    <p><strong>HP:</strong> 300</p>
-                    <p>Ultimate defensive material</p>
-                </div>
-                <div class="item-card">
-                    <h4>🔷 TITANIUM - $180</h4>
-                    <p><strong>HP:</strong> 180</p>
-                    <p>Advanced alloy material</p>
-                </div>
-            </div>
-        </section>
-        
-        <section class="tips-section">
-            <h3>⭐ Strategy Tips</h3>
-            <ul>
-                <li><strong>Defense First:</strong> Build defensive walls early to protect your base core</li>
-                <li><strong>Unit Synergy:</strong> Mix different unit types (Archer for range, Warrior for melee, Mage for support)</li>
-                <li><strong>Weapon Choice:</strong> Switch weapons based on enemy type. Sniper for single targets, Hammer for groups</li>
-                <li><strong>Money Management:</strong> Save money for emergencies but don't leave it unused</li>
-                <li><strong>Positioning:</strong> Keep your base core away from enemies. Build walls in strategic spots</li>
-                <li><strong>Wave Timing:</strong> Hire units between waves for maximum efficiency</li>
-                <li><strong>Learning Curve:</strong> Start with Classic mode to master the mechanics</li>
-            </ul>
-        </section>
-        
-        <section class="installation">
-            <h2>⚡ Quick Start Installation</h2>
             
-            <h3 style="color: #64dd17; margin-top: 20px; margin-bottom: 10px;">Step 1: Install Python</h3>
-            <ul>
-                <li><strong>Windows/Mac/Linux:</strong> Download from <a href="https://www.python.org" target="_blank">python.org</a> (version 3.8 or higher)</li>
-                <li>During installation, <strong>CHECK</strong> "Add Python to PATH"</li>
-                <li>Verify: Open terminal/command prompt and type: <code>python --version</code></li>
-            </ul>
-            
-            <h3 style="color: #64dd17; margin-top: 20px; margin-bottom: 10px;">Step 2: Clone Repository</h3>
-            <ol>
-                <li>Open terminal/command prompt in desired folder</li>
-                <li>Run: <code>git clone https://github.com/zhirkoalexander-maker/nukakola.git</code></li>
-                <li>Navigate: <code>cd nukakola</code></li>
-            </ol>
-            
-            <h3 style="color: #64dd17; margin-top: 20px; margin-bottom: 10px;">Step 3: Install Pygame</h3>
-            <p>Run in terminal/command prompt:</p>
-            <code style="display: block; padding: 10px; background: #000; margin: 10px 0;">pip install pygame</code>
-            
-            <h3 style="color: #64dd17; margin-top: 20px; margin-bottom: 10px;">Step 4: Run the Game</h3>
-            <p>Run in terminal/command prompt:</p>
-            <code style="display: block; padding: 10px; background: #000; margin: 10px 0;">python building_game.py</code>
-            
-            <div class="tips-section" style="margin-top: 20px; border-color: #64dd17;">
-                <h3 style="color: #64dd17;">⚠️ Troubleshooting</h3>
-                <ul>
-                    <li><strong>"ModuleNotFoundError: pygame"</strong> → Run: <code>pip install pygame</code></li>
-                    <li><strong>"Python not found"</strong> → Restart terminal after Python installation</li>
-                    <li><strong>"Command not found"</strong> → Use full path to python: <code>/usr/bin/python3 building_game.py</code> (Mac/Linux)</li>
-                    <li><strong>Game runs slow</strong> → Close other applications or update graphics drivers</li>
-                </ul>
+            <div class="stat-box">
+                <div class="stat-label">HEALTH</div>
+                <div class="stat-value" id="health">100/100</div>
             </div>
-        </section>
-        
-        <section style="background: rgba(15, 52, 96, 0.5); border: 2px solid #64dd17; border-radius: 8px; padding: 25px; margin: 40px 0;">
-            <h2 style="color: #64dd17; margin-bottom: 15px;">📋 System Requirements</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <div>
-                    <strong style="color: #76ff03;">Minimum:</strong>
-                    <ul style="color: #b0e0e6; margin-top: 8px;">
-                        <li>Python 3.8+</li>
-                        <li>Pygame 2.0+</li>
-                        <li>1GB RAM</li>
-                        <li>1280x720 display</li>
-                    </ul>
-                </div>
-                <div>
-                    <strong style="color: #76ff03;">Recommended:</strong>
-                    <ul style="color: #b0e0e6; margin-top: 8px;">
-                        <li>Python 3.9+</li>
-                        <li>Pygame 2.1+</li>
-                        <li>4GB RAM</li>
-                        <li>1920x1080 display</li>
-                    </ul>
-                </div>
+            
+            <div class="stat-box">
+                <div class="stat-label">WAVE</div>
+                <div class="stat-value" id="wave">1</div>
             </div>
-        </section>
+            
+            <div class="stat-box">
+                <div class="stat-label">ENEMIES</div>
+                <div class="stat-value" id="enemies">0</div>
+            </div>
+            
+            <div class="section-title">GAME MODE (1-3)</div>
+            <div class="button-grid">
+                <button class="mode-btn active" data-mode="build">BUILD (1)</button>
+                <button class="mode-btn" data-mode="break">BREAK (2)</button>
+                <button class="mode-btn" data-mode="weapon">WEAPON (3)</button>
+            </div>
+            
+            <div class="section-title">BLOCKS</div>
+            <div class="button-grid">
+                <button class="btn active" data-block="wood">WOOD ($40)</button>
+                <button class="btn" data-block="stone">STONE ($80)</button>
+                <button class="btn" data-block="brick">BRICK ($70)</button>
+                <button class="btn" data-block="grass">GRASS ($30)</button>
+                <button class="btn" data-block="sand">SAND ($25)</button>
+                <button class="btn" data-block="iron">IRON ($150)</button>
+                <button class="btn" data-block="crystal">CRYSTAL ($120)</button>
+                <button class="btn" data-block="obsidian">OBSIDIAN ($250)</button>
+                <button class="btn" data-block="diamond">DIAMOND ($400)</button>
+                <button class="btn" data-block="titanium">TITANIUM ($200)</button>
+            </div>
+            
+            <div class="section-title">WEAPONS (X,C,V,Z,F,L)</div>
+            <div style="line-height: 1.8;">
+                <button class="weapon-btn active" data-weapon="sword">Sword</button>
+                <button class="weapon-btn" data-weapon="axe">Axe</button><br>
+                <button class="weapon-btn" data-weapon="spear">Spear</button>
+                <button class="weapon-btn" data-weapon="sniper">Sniper</button><br>
+                <button class="weapon-btn" data-weapon="hammer">Hammer</button>
+                <button class="weapon-btn" data-weapon="laser">Laser</button>
+            </div>
+        </div>
     </div>
     
-    <footer>
-        <p>&copy; 2024 Base Defense Game. All rights reserved.</p>
-        <p><a href="https://github.com/zhirkoalexander-maker/nukakola" target="_blank">🔗 View on GitHub</a> | <a href="https://github.com/zhirkoalexander-maker" target="_blank">👤 Author</a></p>
-        <p>Built with Pygame | Strategy tower defense game</p>
-    </footer>
+    <div class="modal" id="gameOverModal">
+        <h2>GAME OVER</h2>
+        <p id="finalStats"></p>
+        <button onclick="location.reload()">RESTART</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let gameState = {
+            running: true,
+            mode: 'build',
+            selectedBlock: 'wood',
+            selectedWeapon: 'sword',
+            money: 500,
+            health: 100,
+            wave: 1,
+            waveTime: 0,
+            gameTime: 0
+        };
+        
+        const BLOCK_TYPES = {
+            wood: { color: '#8B5A2B', health: 40, cost: 40 },
+            stone: { color: '#A9A9A9', health: 80, cost: 80 },
+            brick: { color: '#D2691E', health: 60, cost: 70 },
+            grass: { color: '#228B22', health: 30, cost: 30 },
+            sand: { color: '#EED5B7', health: 25, cost: 25 },
+            iron: { color: '#646464', health: 150, cost: 150 },
+            crystal: { color: '#64C8FF', health: 120, cost: 120 },
+            obsidian: { color: '#3C143C', health: 200, cost: 250 },
+            diamond: { color: '#96DCFF', health: 300, cost: 400 },
+            titanium: { color: '#B4B4C8', health: 180, cost: 200 }
+        };
+        
+        const WEAPONS = {
+            sword: { damage: 25, range: 60, cooldown: 30 },
+            axe: { damage: 40, range: 70, cooldown: 50 },
+            spear: { damage: 20, range: 100, cooldown: 20 },
+            sniper: { damage: 80, range: 300, cooldown: 60 },
+            hammer: { damage: 60, range: 90, cooldown: 80 },
+            laser: { damage: 35, range: 150, cooldown: 25 }
+        };
+        
+        class Player {
+            constructor() {
+                this.x = 640;
+                this.y = 360;
+                this.width = 30;
+                this.height = 40;
+                this.speed = 2.5;
+                this.keys = {};
+            }
+            
+            draw() {
+                ctx.fillStyle = '#FF6464';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                ctx.strokeStyle = '#FF0000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(this.x, this.y, this.width, this.height);
+            }
+            
+            update() {
+                if (this.keys['w'] || this.keys['arrowup']) this.y = Math.max(0, this.y - this.speed);
+                if (this.keys['s'] || this.keys['arrowdown']) this.y = Math.min(canvas.height - this.height, this.y + this.speed);
+                if (this.keys['a'] || this.keys['arrowleft']) this.x = Math.max(0, this.x - this.speed);
+                if (this.keys['d'] || this.keys['arrowright']) this.x = Math.min(canvas.width - this.width, this.x + this.speed);
+            }
+        }
+        
+        class Block {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type;
+                this.health = BLOCK_TYPES[type].health;
+                this.maxHealth = BLOCK_TYPES[type].health;
+            }
+            
+            draw() {
+                ctx.fillStyle = BLOCK_TYPES[this.type].color;
+                ctx.fillRect(this.x, this.y, 40, 40);
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(this.x, this.y, 40, 40);
+                
+                if (this.health < this.maxHealth) {
+                    const healthPercent = this.health / this.maxHealth;
+                    ctx.fillStyle = '#C41C3B';
+                    ctx.fillRect(this.x, this.y + 37, 40, 3);
+                    ctx.fillStyle = '#00C800';
+                    ctx.fillRect(this.x, this.y + 37, 40 * healthPercent, 3);
+                }
+            }
+            
+            takeDamage(damage) {
+                this.health -= damage;
+                return this.health <= 0;
+            }
+        }
+        
+        class Enemy {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20;
+                this.width = 20;
+                this.height = 20;
+                this.health = 100;
+                this.maxHealth = 100;
+                this.speed = 1 + Math.random() * 0.5;
+                this.type = Math.floor(Math.random() * 5);
+            }
+            
+            draw() {
+                const colors = ['#FF4444', '#FF8844', '#FFFF44', '#44FF44', '#4444FF'];
+                ctx.fillStyle = colors[this.type];
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
+                ctx.fillStyle = '#C41C3B';
+                ctx.fillRect(this.x, this.y - 5, this.width, 2);
+                const healthWidth = (this.health / this.maxHealth) * this.width;
+                ctx.fillStyle = '#00C800';
+                ctx.fillRect(this.x, this.y - 5, healthWidth, 2);
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+            
+            takeDamage(damage) {
+                this.health -= damage;
+                return this.health <= 0;
+            }
+        }
+        
+        let player = new Player();
+        let blocks = [];
+        let enemies = [];
+        
+        document.addEventListener('keydown', (e) => {
+            player.keys[e.key.toLowerCase()] = true;
+            if (e.key === '1') { gameState.mode = 'build'; updateModeButtons(); }
+            if (e.key === '2') { gameState.mode = 'break'; updateModeButtons(); }
+            if (e.key === '3') { gameState.mode = 'weapon'; updateModeButtons(); }
+            if (e.key.toLowerCase() === 'x') { gameState.selectedWeapon = 'sword'; updateWeaponButtons(); }
+            if (e.key.toLowerCase() === 'c') { gameState.selectedWeapon = 'axe'; updateWeaponButtons(); }
+            if (e.key.toLowerCase() === 'v') { gameState.selectedWeapon = 'spear'; updateWeaponButtons(); }
+            if (e.key.toLowerCase() === 'z') { gameState.selectedWeapon = 'sniper'; updateWeaponButtons(); }
+            if (e.key.toLowerCase() === 'f') { gameState.selectedWeapon = 'hammer'; updateWeaponButtons(); }
+            if (e.key.toLowerCase() === 'l') { gameState.selectedWeapon = 'laser'; updateWeaponButtons(); }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            player.keys[e.key.toLowerCase()] = false;
+        });
+        
+        canvas.addEventListener('click', (e) => {
+            if (!gameState.running) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * canvas.width / rect.width;
+            const y = (e.clientY - rect.top) * canvas.height / rect.height;
+            
+            if (gameState.mode === 'build') {
+                const blockX = Math.floor(x / 40) * 40;
+                const blockY = Math.floor(y / 40) * 40;
+                const cost = BLOCK_TYPES[gameState.selectedBlock].cost;
+                
+                if (gameState.money >= cost && !blocks.some(b => b.x === blockX && b.y === blockY)) {
+                    blocks.push(new Block(blockX, blockY, gameState.selectedBlock));
+                    gameState.money -= cost;
+                }
+            } else if (gameState.mode === 'break') {
+                for (let i = blocks.length - 1; i >= 0; i--) {
+                    if (x >= blocks[i].x && x < blocks[i].x + 40 && y >= blocks[i].y && y < blocks[i].y + 40) {
+                        gameState.money += Math.floor(BLOCK_TYPES[blocks[i].type].cost / 2);
+                        blocks.splice(i, 1);
+                        break;
+                    }
+                }
+            } else if (gameState.mode === 'weapon') {
+                const weapon = WEAPONS[gameState.selectedWeapon];
+                for (let i = enemies.length - 1; i >= 0; i--) {
+                    const dx = enemies[i].x + enemies[i].width / 2 - player.x - player.width / 2;
+                    const dy = enemies[i].y + enemies[i].height / 2 - player.y - player.height / 2;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < weapon.range) {
+                        if (enemies[i].takeDamage(weapon.damage)) {
+                            gameState.money += 20;
+                            enemies.splice(i, 1);
+                        }
+                    }
+                }
+            }
+        });
+        
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                gameState.selectedBlock = btn.dataset.block;
+            });
+        });
+        
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                gameState.mode = btn.dataset.mode;
+                updateModeButtons();
+            });
+        });
+        
+        document.querySelectorAll('.weapon-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                gameState.selectedWeapon = btn.dataset.weapon;
+                updateWeaponButtons();
+            });
+        });
+        
+        function updateModeButtons() {
+            document.querySelectorAll('.mode-btn').forEach(b => {
+                b.classList.remove('active');
+                if (b.dataset.mode === gameState.mode) b.classList.add('active');
+            });
+        }
+        
+        function updateWeaponButtons() {
+            document.querySelectorAll('.weapon-btn').forEach(b => {
+                b.classList.remove('active');
+                if (b.dataset.weapon === gameState.selectedWeapon) b.classList.add('active');
+            });
+        }
+        
+        function update() {
+            if (!gameState.running) return;
+            
+            gameState.gameTime++;
+            gameState.waveTime++;
+            
+            player.update();
+            
+            if (gameState.gameTime % (120 - gameState.wave * 5) === 0 && enemies.length < gameState.wave * 3) {
+                enemies.push(new Enemy());
+            }
+            
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                enemies[i].update();
+                
+                for (let j = blocks.length - 1; j >= 0; j--) {
+                    const block = blocks[j];
+                    if (enemies[i].x < block.x + 40 && enemies[i].x + enemies[i].width > block.x &&
+                        enemies[i].y < block.y + 40 && enemies[i].y + enemies[i].height > block.y) {
+                        
+                        if (block.takeDamage(5)) {
+                            blocks.splice(j, 1);
+                        }
+                        enemies[i].speed = -enemies[i].speed;
+                    }
+                }
+                
+                if (enemies[i].y > canvas.height) {
+                    gameState.health -= 10;
+                    enemies.splice(i, 1);
+                }
+            }
+            
+            if (enemies.length === 0 && gameState.waveTime > 300) {
+                gameState.wave++;
+                gameState.waveTime = 0;
+                gameState.money += 100;
+            }
+            
+            if (gameState.health <= 0) {
+                gameState.running = false;
+                document.getElementById('finalStats').innerHTML = `
+                    <strong>WAVE:</strong> ${gameState.wave}<br>
+                    <strong>MONEY:</strong> ${gameState.money}<br>
+                    <strong>BLOCKS:</strong> ${blocks.length}
+                `;
+                document.getElementById('gameOverModal').classList.add('show');
+            }
+        }
+        
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = 'rgba(100, 100, 100, 0.2)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x <= canvas.width; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y <= canvas.height; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            blocks.forEach(block => block.draw());
+            enemies.forEach(enemy => enemy.draw());
+            player.draw();
+        }
+        
+        function updateUI() {
+            document.getElementById('money').textContent = gameState.money;
+            document.getElementById('health').textContent = `${gameState.health}/100`;
+            document.getElementById('wave').textContent = gameState.wave;
+            document.getElementById('enemies').textContent = enemies.length;
+        }
+        
+        function gameLoop() {
+            update();
+            draw();
+            updateUI();
+            requestAnimationFrame(gameLoop);
+        }
+        
+        gameLoop();
+    </script>
 </body>
 </html>
