@@ -45,53 +45,55 @@
             width: 280px;
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid #64dd17;
-            padding: 12px;
+            padding: 10px;
             overflow-y: auto;
             max-height: 600px;
-            font-size: 0.95em;
+            font-size: 0.9em;
         }
         
         .stat-box {
             background: rgba(100, 221, 23, 0.1);
             border: 1px solid #64dd17;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 0.9em;
+            padding: 8px;
+            margin-bottom: 8px;
+            font-size: 0.85em;
         }
         
         .stat-label {
             color: #64dd17;
             font-weight: bold;
+            font-size: 0.8em;
         }
         
         .stat-value {
             color: #a8ff00;
-            font-size: 1.2em;
-            margin-top: 3px;
+            font-size: 1.1em;
+            margin-top: 2px;
         }
         
         .section-title {
             color: #ff6b6b;
             font-weight: bold;
-            margin-top: 15px;
-            margin-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 7px;
             border-bottom: 1px solid #ff6b6b;
-            padding-bottom: 5px;
+            padding-bottom: 3px;
+            font-size: 0.85em;
         }
         
         .button-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 5px;
+            gap: 3px;
         }
         
         .btn {
-            padding: 8px;
+            padding: 6px;
             background: rgba(100, 221, 23, 0.2);
             color: #64dd17;
             border: 1px solid #64dd17;
             cursor: pointer;
-            font-size: 0.85em;
+            font-size: 0.75em;
             transition: all 0.2s;
         }
         
@@ -107,15 +109,15 @@
         
         .weapon-btn {
             display: inline-block;
-            width: calc(50% - 3px);
-            padding: 6px;
+            width: calc(50% - 2px);
+            padding: 5px;
             background: rgba(255, 100, 100, 0.2);
             color: #ff9999;
             border: 1px solid #ff6666;
             cursor: pointer;
-            font-size: 0.7em;
-            margin-right: 5px;
-            margin-bottom: 5px;
+            font-size: 0.65em;
+            margin-right: 4px;
+            margin-bottom: 4px;
         }
         
         .weapon-btn:hover {
@@ -130,20 +132,21 @@
         
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #64dd17;
             text-shadow: 0 0 10px #64dd17;
+            font-size: 0.9em;
         }
         
         .mode-btn {
-            padding: 8px;
+            padding: 6px;
             background: rgba(200, 100, 150, 0.2);
             color: #ff99cc;
             border: 1px solid #cc6699;
             cursor: pointer;
-            font-size: 0.85em;
+            font-size: 0.75em;
             width: 100%;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         
         .mode-btn.active {
@@ -159,11 +162,14 @@
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.95);
             border: 3px solid #ff6b6b;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
             z-index: 1000;
             display: none;
-            min-width: 350px;
+            min-width: 300px;
+            max-width: 500px;
+            overflow-y: auto;
+            max-height: 80vh;
         }
         
         .modal.show {
@@ -172,24 +178,43 @@
         
         .modal h2 {
             color: #ff6b6b;
-            font-size: 2em;
-            margin-bottom: 20px;
+            font-size: 1.8em;
+            margin-bottom: 15px;
         }
         
         .modal p {
             color: #64dd17;
-            margin: 10px 0;
-            font-size: 1.1em;
+            margin: 8px 0;
+            font-size: 1em;
         }
         
         .modal button {
-            padding: 10px 20px;
+            padding: 8px 15px;
             background: #64dd17;
             color: #000;
             border: none;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+        
+        .shop-item {
+            background: rgba(100, 100, 255, 0.2);
+            border: 1px solid #6666ff;
+            padding: 8px;
+            margin-bottom: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .shop-item:hover {
+            background: rgba(100, 100, 255, 0.4);
+        }
+        
+        .shop-item.purchased {
+            background: rgba(100, 221, 23, 0.3);
+            border: 1px solid #64dd17;
         }
     </style>
 </head>
@@ -197,7 +222,7 @@
     <div class="game-container">
         <div style="flex: 1;">
             <div class="header">
-                <h1>BASE DEFENSE - TOWER BUILDER</h1>
+                <h1>BASE DEFENSE</h1>
             </div>
             <canvas id="gameCanvas" width="1280" height="720"></canvas>
         </div>
@@ -210,7 +235,7 @@
             
             <div class="stat-box">
                 <div class="stat-label">HEALTH</div>
-                <div class="stat-value" id="health">100/100</div>
+                <div class="stat-value" id="health">100</div>
             </div>
             
             <div class="stat-box">
@@ -223,7 +248,10 @@
                 <div class="stat-value" id="enemies">0</div>
             </div>
             
-            <div class="section-title">GAME MODE (1-3)</div>
+            <div class="section-title">CHARACTER</div>
+            <button class="btn active" style="width: 100%; margin-bottom: 5px;" onclick="openCharacterShop()">🏪 SHOP</button>
+            
+            <div class="section-title">MODE (1-3)</div>
             <div class="button-grid">
                 <button class="mode-btn active" data-mode="build">BUILD (1)</button>
                 <button class="mode-btn" data-mode="break">BREAK (2)</button>
@@ -242,16 +270,11 @@
                 <button class="btn" data-block="obsidian">OBSIDIAN ($250)</button>
                 <button class="btn" data-block="diamond">DIAMOND ($400)</button>
                 <button class="btn" data-block="titanium">TITANIUM ($200)</button>
+                <button class="btn" data-block="dynamite">DYNAMITE ($300)</button>
             </div>
             
-            <div class="section-title">WEAPONS (X,C,V,Z,F,L)</div>
-            <div style="line-height: 1.8;">
-                <button class="weapon-btn active" data-weapon="sword">Sword</button>
-                <button class="weapon-btn" data-weapon="axe">Axe</button><br>
-                <button class="weapon-btn" data-weapon="spear">Spear</button>
-                <button class="weapon-btn" data-weapon="sniper">Sniper</button><br>
-                <button class="weapon-btn" data-weapon="hammer">Hammer</button>
-                <button class="weapon-btn" data-weapon="laser">Laser</button>
+            <div class="section-title">WEAPONS</div>
+            <div id="weaponsList" style="line-height: 1.6;">
             </div>
         </div>
     </div>
@@ -260,6 +283,12 @@
         <h2>GAME OVER</h2>
         <p id="finalStats"></p>
         <button onclick="location.reload()">RESTART</button>
+    </div>
+    
+    <div class="modal" id="characterShopModal">
+        <h2>CHARACTER SHOP</h2>
+        <div id="charactersList"></div>
+        <button onclick="closeCharacterShop()">CLOSE</button>
     </div>
 
     <script>
@@ -275,7 +304,9 @@
             health: 100,
             wave: 1,
             waveTime: 0,
-            gameTime: 0
+            gameTime: 0,
+            character: 'warrior',
+            ownedWeapons: { sword: true }
         };
         
         const BLOCK_TYPES = {
@@ -288,16 +319,24 @@
             crystal: { color: '#64C8FF', health: 120, cost: 120 },
             obsidian: { color: '#3C143C', health: 200, cost: 250 },
             diamond: { color: '#96DCFF', health: 300, cost: 400 },
-            titanium: { color: '#B4B4C8', health: 180, cost: 200 }
+            titanium: { color: '#B4B4C8', health: 180, cost: 200 },
+            dynamite: { color: '#FF6600', health: 50, cost: 300 }
         };
         
         const WEAPONS = {
-            sword: { damage: 25, range: 60, cooldown: 30 },
-            axe: { damage: 40, range: 70, cooldown: 50 },
-            spear: { damage: 20, range: 100, cooldown: 20 },
-            sniper: { damage: 80, range: 300, cooldown: 60 },
-            hammer: { damage: 60, range: 90, cooldown: 80 },
-            laser: { damage: 35, range: 150, cooldown: 25 }
+            sword: { damage: 25, range: 60, cooldown: 30, cost: 0 },
+            axe: { damage: 40, range: 70, cooldown: 50, cost: 150 },
+            spear: { damage: 20, range: 100, cooldown: 20, cost: 100 },
+            sniper: { damage: 80, range: 300, cooldown: 60, cost: 300 },
+            hammer: { damage: 60, range: 90, cooldown: 80, cost: 250 },
+            laser: { damage: 35, range: 150, cooldown: 25, cost: 400 }
+        };
+        
+        const CHARACTERS = {
+            warrior: { name: 'WARRIOR', color: '#FF6464', cost: 0 },
+            assassin: { name: 'ASSASSIN', color: '#FF00FF', cost: 200 },
+            paladin: { name: 'PALADIN', color: '#FFFF00', cost: 350 },
+            mage: { name: 'MAGE', color: '#00FFFF', cost: 250 }
         };
         
         class Player {
@@ -308,12 +347,25 @@
                 this.height = 40;
                 this.speed = 2.5;
                 this.keys = {};
+                this.attackCooldown = 0;
             }
             
             draw() {
-                ctx.fillStyle = '#FF6464';
+                const char = CHARACTERS[gameState.character];
+                ctx.fillStyle = char.color;
                 ctx.fillRect(this.x, this.y, this.width, this.height);
-                ctx.strokeStyle = '#FF0000';
+                
+                ctx.fillStyle = '#000';
+                ctx.fillRect(this.x + 8, this.y + 8, 3, 3);
+                ctx.fillRect(this.x + 19, this.y + 8, 3, 3);
+                
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(this.x + 15, this.y + 18, 3, 0, Math.PI);
+                ctx.stroke();
+                
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(this.x, this.y, this.width, this.height);
             }
@@ -323,6 +375,8 @@
                 if (this.keys['s'] || this.keys['arrowdown']) this.y = Math.min(canvas.height - this.height, this.y + this.speed);
                 if (this.keys['a'] || this.keys['arrowleft']) this.x = Math.max(0, this.x - this.speed);
                 if (this.keys['d'] || this.keys['arrowright']) this.x = Math.min(canvas.width - this.width, this.x + this.speed);
+                
+                if (this.attackCooldown > 0) this.attackCooldown--;
             }
         }
         
@@ -336,11 +390,9 @@
             }
             
             draw() {
-                // Основной цвет блока
                 ctx.fillStyle = BLOCK_TYPES[this.type].color;
                 ctx.fillRect(this.x, this.y, 40, 40);
                 
-                // Паттерн для текстуры
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
                 for (let i = 0; i < 40; i += 5) {
                     ctx.fillRect(this.x + i, this.y, 2, 40);
@@ -349,16 +401,18 @@
                     ctx.fillRect(this.x, this.y + i, 40, 2);
                 }
                 
-                // Граница
+                if (this.type === 'dynamite') {
+                    ctx.fillStyle = '#FF4400';
+                    ctx.fillRect(this.x + 15, this.y + 5, 10, 15);
+                }
+                
                 ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(this.x, this.y, 40, 40);
                 
-                // Блик (свет)
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
                 ctx.fillRect(this.x, this.y, 8, 8);
                 
-                // Полоса здоровья
                 if (this.health < this.maxHealth) {
                     const healthPercent = this.health / this.maxHealth;
                     ctx.fillStyle = '#C41C3B';
@@ -384,6 +438,7 @@
                 this.maxHealth = 100;
                 this.speed = 1.5 + Math.random() * 0.8;
                 this.type = Math.floor(Math.random() * 5);
+                this.attackCooldown = 0;
             }
             
             draw() {
@@ -391,26 +446,40 @@
                 ctx.fillStyle = colors[this.type];
                 ctx.fillRect(this.x, this.y, this.width, this.height);
                 
-                // Оглобки зомби
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-                ctx.fillRect(this.x - 2, this.y + 5, 4, 8);
-                ctx.fillRect(this.x + this.width - 2, this.y + 5, 4, 8);
+                ctx.fillStyle = '#FF0000';
+                ctx.fillRect(this.x + 3, this.y + 4, 3, 3);
+                ctx.fillRect(this.x + 14, this.y + 4, 3, 3);
                 
-                // Граница
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(this.x + 6, this.y + 12);
+                ctx.lineTo(this.x + 14, this.y + 12);
+                ctx.stroke();
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+                ctx.fillRect(this.x - 3, this.y + 5, 4, 10);
+                ctx.fillRect(this.x + this.width - 1, this.y + 5, 4, 10);
+                
                 ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
                 ctx.lineWidth = 1;
                 ctx.strokeRect(this.x, this.y, this.width, this.height);
                 
-                // Полоса здоровья
                 ctx.fillStyle = '#C41C3B';
                 ctx.fillRect(this.x - 2, this.y - 5, this.width + 4, 3);
                 const healthWidth = (this.health / this.maxHealth) * (this.width + 4);
                 ctx.fillStyle = '#00C800';
                 ctx.fillRect(this.x - 2, this.y - 5, healthWidth, 3);
+                
+                if (this.attackCooldown > 0) {
+                    ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
+                    ctx.beginPath();
+                    ctx.arc(this.x + this.width / 2, this.y + this.height / 2, 15, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             }
             
             update(playerX, playerY) {
-                // Враги идут в сторону игрока
                 const dx = playerX - this.x;
                 const dy = playerY - this.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
@@ -419,6 +488,8 @@
                     this.x += (dx / distance) * this.speed;
                     this.y += (dy / distance) * this.speed;
                 }
+                
+                if (this.attackCooldown > 0) this.attackCooldown--;
             }
             
             takeDamage(damage) {
@@ -436,17 +507,24 @@
             if (e.key === '1') { gameState.mode = 'build'; updateModeButtons(); }
             if (e.key === '2') { gameState.mode = 'break'; updateModeButtons(); }
             if (e.key === '3') { gameState.mode = 'weapon'; updateModeButtons(); }
-            if (e.key.toLowerCase() === 'x') { gameState.selectedWeapon = 'sword'; updateWeaponButtons(); }
-            if (e.key.toLowerCase() === 'c') { gameState.selectedWeapon = 'axe'; updateWeaponButtons(); }
-            if (e.key.toLowerCase() === 'v') { gameState.selectedWeapon = 'spear'; updateWeaponButtons(); }
-            if (e.key.toLowerCase() === 'z') { gameState.selectedWeapon = 'sniper'; updateWeaponButtons(); }
-            if (e.key.toLowerCase() === 'f') { gameState.selectedWeapon = 'hammer'; updateWeaponButtons(); }
-            if (e.key.toLowerCase() === 'l') { gameState.selectedWeapon = 'laser'; updateWeaponButtons(); }
+            if (e.key.toLowerCase() === 'x') selectWeapon('sword');
+            if (e.key.toLowerCase() === 'c') selectWeapon('axe');
+            if (e.key.toLowerCase() === 'v') selectWeapon('spear');
+            if (e.key.toLowerCase() === 'z') selectWeapon('sniper');
+            if (e.key.toLowerCase() === 'f') selectWeapon('hammer');
+            if (e.key.toLowerCase() === 'l') selectWeapon('laser');
         });
         
         document.addEventListener('keyup', (e) => {
             player.keys[e.key.toLowerCase()] = false;
         });
+        
+        function selectWeapon(weapon) {
+            if (gameState.ownedWeapons[weapon]) {
+                gameState.selectedWeapon = weapon;
+                updateWeaponsList();
+            }
+        }
         
         canvas.addEventListener('click', (e) => {
             if (!gameState.running) return;
@@ -474,24 +552,29 @@
                 }
             } else if (gameState.mode === 'weapon') {
                 const weapon = WEAPONS[gameState.selectedWeapon];
-                for (let i = enemies.length - 1; i >= 0; i--) {
-                    const dx = enemies[i].x + enemies[i].width / 2 - player.x - player.width / 2;
-                    const dy = enemies[i].y + enemies[i].height / 2 - player.y - player.height / 2;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (dist < weapon.range) {
-                        if (enemies[i].takeDamage(weapon.damage)) {
-                            gameState.money += 20;
-                            enemies.splice(i, 1);
+                if (player.attackCooldown <= 0) {
+                    for (let i = enemies.length - 1; i >= 0; i--) {
+                        const dx = enemies[i].x + enemies[i].width / 2 - player.x - player.width / 2;
+                        const dy = enemies[i].y + enemies[i].height / 2 - player.y - player.height / 2;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < weapon.range) {
+                            if (enemies[i].takeDamage(weapon.damage)) {
+                                gameState.money += 20;
+                                enemies.splice(i, 1);
+                            } else {
+                                enemies[i].attackCooldown = 10;
+                            }
                         }
                     }
+                    player.attackCooldown = weapon.cooldown;
                 }
             }
         });
         
-        document.querySelectorAll('.btn').forEach(btn => {
+        document.querySelectorAll('.btn[data-block]').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.btn[data-block]').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 gameState.selectedBlock = btn.dataset.block;
             });
@@ -504,13 +587,6 @@
             });
         });
         
-        document.querySelectorAll('.weapon-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                gameState.selectedWeapon = btn.dataset.weapon;
-                updateWeaponButtons();
-            });
-        });
-        
         function updateModeButtons() {
             document.querySelectorAll('.mode-btn').forEach(b => {
                 b.classList.remove('active');
@@ -518,11 +594,61 @@
             });
         }
         
-        function updateWeaponButtons() {
-            document.querySelectorAll('.weapon-btn').forEach(b => {
-                b.classList.remove('active');
-                if (b.dataset.weapon === gameState.selectedWeapon) b.classList.add('active');
-            });
+        function updateWeaponsList() {
+            const list = document.getElementById('weaponsList');
+            let html = '';
+            for (const [weapon, data] of Object.entries(WEAPONS)) {
+                const owned = gameState.ownedWeapons[weapon];
+                if (owned) {
+                    html += `<button class="weapon-btn ${gameState.selectedWeapon === weapon ? 'active' : ''}" onclick="selectWeapon('${weapon}')">${weapon.toUpperCase()}</button>`;
+                } else {
+                    html += `<button class="weapon-btn" onclick="buyWeapon('${weapon}')" style="background: rgba(255, 150, 100, 0.3); color: #ffaa00;">BUY $${data.cost}</button>`;
+                }
+            }
+            list.innerHTML = html;
+        }
+        
+        function buyWeapon(weapon) {
+            const cost = WEAPONS[weapon].cost;
+            if (gameState.money >= cost) {
+                gameState.money -= cost;
+                gameState.ownedWeapons[weapon] = true;
+                gameState.selectedWeapon = weapon;
+                updateWeaponsList();
+            } else {
+                alert('Not enough money!');
+            }
+        }
+        
+        function openCharacterShop() {
+            let html = '';
+            for (const [char, data] of Object.entries(CHARACTERS)) {
+                const owned = gameState.character === char;
+                html += `
+                    <div class="shop-item ${owned ? 'purchased' : ''}" onclick="buyCharacter('${char}')">
+                        <strong>${data.name}</strong><br>
+                        ${owned ? '✓ SELECTED' : `$${data.cost}`}
+                    </div>
+                `;
+            }
+            document.getElementById('charactersList').innerHTML = html;
+            document.getElementById('characterShopModal').classList.add('show');
+        }
+        
+        function buyCharacter(character) {
+            if (gameState.character === character) return;
+            const cost = CHARACTERS[character].cost;
+            if (gameState.money >= cost) {
+                gameState.money -= cost;
+                gameState.character = character;
+                openCharacterShop();
+            } else {
+                alert('Not enough money!');
+            }
+        }
+        
+        function closeCharacterShop() {
+            document.getElementById('characterShopModal').classList.remove('show');
         }
         
         function update() {
@@ -551,14 +677,14 @@
                     }
                 }
                 
-                // Враг дошел до низа
                 const distToPlayer = Math.sqrt(
                     Math.pow(enemies[i].x - player.x, 2) + 
                     Math.pow(enemies[i].y - player.y, 2)
                 );
                 
                 if (distToPlayer < 30) {
-                    gameState.health -= 5;
+                    gameState.health -= 3;
+                    enemies[i].attackCooldown = 30;
                     enemies.splice(i, 1);
                 }
             }
@@ -606,10 +732,12 @@
         
         function updateUI() {
             document.getElementById('money').textContent = gameState.money;
-            document.getElementById('health').textContent = `${gameState.health}/100`;
+            document.getElementById('health').textContent = gameState.health;
             document.getElementById('wave').textContent = gameState.wave;
             document.getElementById('enemies').textContent = enemies.length;
         }
+        
+        updateWeaponsList();
         
         function gameLoop() {
             update();
